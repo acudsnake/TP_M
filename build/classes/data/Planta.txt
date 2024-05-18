@@ -1,12 +1,6 @@
-aa,11,
--
--
-rojo,333,
--
--
-1,1,
-Kek,b,123,c,
+Azul,334,
+3,3,3,3,
 ong, muh fasi mano,
-1,1,
--
--
+Rojo,111,
+3,3,3,3,
+ong, muh fasi mano,

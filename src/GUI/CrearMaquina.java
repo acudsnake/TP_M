@@ -6,15 +6,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-
-
 public class CrearMaquina extends javax.swing.JPanel {
-    Planta p= new Planta();
-    
     public CrearMaquina() {
         initComponents();
         imprimir_tabla();
     }
+
     
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
@@ -29,7 +26,6 @@ public class CrearMaquina extends javax.swing.JPanel {
                return editable[column];
            }
            };
-           
            //limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
            ArrayList<Planta> lista_platas= Fichero.leerTodaslasPlantas();
@@ -125,6 +121,15 @@ public class CrearMaquina extends javax.swing.JPanel {
         Background.setLayout(BackgroundLayout);
         BackgroundLayout.setHorizontalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BackgroundLayout.createSequentialGroup()
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1))
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addGap(352, 352, 352)
+                        .addComponent(jLabel5)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                 .addContainerGap(153, Short.MAX_VALUE)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,18 +154,9 @@ public class CrearMaquina extends javax.swing.JPanel {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(137, 137, 137))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jButton2)
-                .addGap(103, 103, 103))
-            .addGroup(BackgroundLayout.createSequentialGroup()
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1))
-                    .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addGap(352, 352, 352)
-                        .addComponent(jLabel5)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(50, 50, 50))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,9 +183,9 @@ public class CrearMaquina extends javax.swing.JPanel {
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(34, 34, 34)
                 .addComponent(jButton2)
-                .addGap(64, 64, 64))
+                .addGap(48, 48, 48))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -205,7 +201,7 @@ public class CrearMaquina extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_Agregar menu_agregar= new Menu_Agregar();
+        Menu_Planta menu_agregar= new Menu_Planta();
         menu_agregar.setSize(736,449);
         menu_agregar.setLocation(0,0);
         Background.setLayout(new BorderLayout());
@@ -227,10 +223,10 @@ public class CrearMaquina extends javax.swing.JPanel {
         int seleccion=0;
         Planta p= new Planta();
         for(int i=0; i<Table.getRowCount(); i++){
-            if(String.valueOf(Table.getValueAt(i, 2))=="true")
+            if((Boolean) Table.getValueAt(i, 2)){
                 seleccion++;
-            p.setColor((String) Table.getValueAt(i, 0));
-            p.setSuperficie((int) Table.getValueAt(i, 1));
+                p.setColor((String) Table.getValueAt(i, 0));
+                p.setSuperficie((int) Table.getValueAt(i, 1));}
         }
         if(seleccion!=1){
             JOptionPane.showMessageDialog(null, "Seleccione una planta", "Ok", JOptionPane.INFORMATION_MESSAGE);
@@ -238,9 +234,15 @@ public class CrearMaquina extends javax.swing.JPanel {
         else{
         Maquina m= new Maquina(Marca.getText(), Modelo.getText(), Integer.parseInt(Numero.getText()), Estado.getText());
         m.setPlanta(p);
-        
         Fichero.guardar_maquina(m);
         JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        }
+        Marca.setText("");
+        Modelo.setText("");
+        Numero.setText("");
+        Estado.setText("");
+        for (int i = 0; i < Table.getRowCount(); i++) {
+                  Table.setValueAt(false, i, 2);
         }
         }
         
@@ -248,7 +250,14 @@ public class CrearMaquina extends javax.swing.JPanel {
 
     
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
-
+            int selectedRow = Table.getSelectedRow();
+            if ((Boolean)Table.getValueAt(selectedRow , 2)) {
+               for (int i = 0; i < Table.getRowCount(); i++) {
+               if ( i != selectedRow) {
+                  Table.setValueAt(false, i, 2);
+               }
+             }
+        }
     }//GEN-LAST:event_TableMouseClicked
 
 

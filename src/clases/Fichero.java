@@ -1,5 +1,4 @@
 package clases;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -72,7 +71,7 @@ public class Fichero {
         }
 
     public static void guardar_maquina(Maquina maquina){
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathMaquinas))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathMaquinas, true))) {
                     writer.write(maquina.getMarca()+ DATA_SEPARATOR + maquina.getModelo()+ DATA_SEPARATOR + maquina.getNumero() + DATA_SEPARATOR + maquina.getEstado()+ DATA_SEPARATOR +"\n");
                     writer.write(maquina.getPlanta().getColor() + DATA_SEPARATOR + maquina.getPlanta().getSuperficie() +DATA_SEPARATOR +"\n");
                     writer.write(DATA_SEPARATOR +"\n");
@@ -83,7 +82,7 @@ public class Fichero {
         }    
     
     public static void guardar_proceso(Proceso proceso){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathProcesos))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathProcesos, true))) {
                 writer.write(proceso.getNombre() + DATA_SEPARATOR + proceso.getComplejidad() + DATA_SEPARATOR + "\n");
                 if(!proceso.getPlanta().isEmpty()){
                     for (Planta planta : proceso.getPlanta()) {
@@ -100,7 +99,7 @@ public class Fichero {
     }
     
     public static void guardar_tecnico(Tecnico tecnico){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathTecnicos))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathTecnicos, true))) {
                 writer.write(tecnico.getNombre() + DATA_SEPARATOR + tecnico.getApellido() + DATA_SEPARATOR + tecnico.getFechaNacimiento() + DATA_SEPARATOR + tecnico.getDNI() + DATA_SEPARATOR + tecnico.getContacto() + DATA_SEPARATOR + "\n");
                 //Guardar los opera
         }
@@ -110,7 +109,7 @@ public class Fichero {
     }
 
     public static void guardar_Opera(Opera opera){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathOperas))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathOperas, true))) {
                 writer.write(
                         opera.getFechaInicio().getDayOfMonth() + DATA_SEPARATOR +
                         opera.getFechaInicio().getMonthValue() + DATA_SEPARATOR +
@@ -193,7 +192,7 @@ public class Fichero {
         }
         return lista_plantas;
     }
-
+    
     public static ArrayList<Maquina> leerTodaslasMaquinas(){
         ArrayList<Maquina> lista_maquinas = new ArrayList<>();
         Maquina maquina= new Maquina();
@@ -232,21 +231,50 @@ public class Fichero {
         return lista_procesos;
     }
     
-    public static Boolean buscar_planta_por_color(Planta planta){
+    public static Planta buscar_planta(Planta planta){
         String linea;
+        Planta p = new Planta();
+        ArrayList<Maquina> lista_maquinas = new ArrayList<>();
+        ArrayList<Proceso> lista_procesos = new ArrayList<>();
+        Proceso proceso = new Proceso();
+        Maquina maquina = new Maquina();
+        
         try (BufferedReader br = new BufferedReader(new FileReader(pathPlantas))) {
            while((linea=br.readLine()) !=null){
                String[] datos = linea.split(DATA_SEPARATOR);
-               if(datos[0].equals(planta.getColor())){
-                   return true;
+               linea= br.readLine();
+               String[] maquinas = linea.split(DATA_SEPARATOR);
+               linea= br.readLine();
+               String[] procesos = linea.split(DATA_SEPARATOR);
+               if(datos[0].equals(planta.getColor()) && Integer.parseInt(datos[1])==planta.getSuperficie()){
+                   p.setColor(datos[0]);
+                   p.setSuperficie(Integer.parseInt(datos[1]));
+                   
+                   if(!maquinas[0].equals("-")){
+                        for (int i=0; i < maquinas.length; i=i+4){
+                            maquina.setMarca(maquinas[i]);
+                            maquina.setModelo(maquinas[i+1]);
+                            maquina.setNumero(Integer.parseInt(maquinas[i+2]));
+                            maquina.setEstado(maquinas[i+3]);
+                            lista_maquinas.add(maquina);
+                        }}
+                    if(!"-".equals(procesos[0])){
+                    for (int i=0; i < procesos.length; i=i+2){
+                        proceso.setNombre(procesos[0]);
+                        proceso.setComplejidad(procesos[1]);
+                        lista_procesos.add(proceso);
+                    }
+                    } 
+                planta.setMaquina(lista_maquinas);
+                planta.setProceso(lista_procesos);
+                return p;
                }
            }
-            
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
     
    /* public static void leerTodaslasMaquinas2(){

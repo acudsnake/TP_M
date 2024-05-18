@@ -126,12 +126,12 @@ public class ConsultarMaquina extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_consultar menu_consultar= new Menu_consultar();
-        menu_consultar.setSize(736,449);
-        menu_consultar.setLocation(0,0);
+        Menu_Maquina menu_maquina= new Menu_Maquina();
+        menu_maquina.setSize(736,449);
+        menu_maquina.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_consultar, BorderLayout.CENTER);
+        Background.add(menu_maquina, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint(); 
     }//GEN-LAST:event_jButton1ActionPerformed
