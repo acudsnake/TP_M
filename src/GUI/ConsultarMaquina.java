@@ -1,46 +1,65 @@
 package GUI;
-
-import clases.Fichero;
-import clases.Planta;
+import clases.*;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
-public class ConsultarPlanta extends javax.swing.JPanel {
+
+public class ConsultarMaquina extends javax.swing.JPanel {
     DefaultTableModel model = new DefaultTableModel();
     
-    public ConsultarPlanta() {
+    public ConsultarMaquina() {
         initComponents();
-        model.addColumn("Color");
-        model.addColumn("Superficie");
+        model.addColumn("Marca");
+        model.addColumn("Modelo");
+        model.addColumn("Numero");
+        model.addColumn("Estado");
         imprimir_tabla();
+        
     }
 
     public void imprimir_tabla(){
         model.setRowCount(0);
-        ArrayList<Planta> lista_platas= Fichero.leerTodaslasPlantas();
+        ArrayList<Maquina> lista_maquinas= Fichero.leerTodaslasMaquinas();
         int i=0;
-        while (i < lista_platas.size()) {
-             model.addRow(new String[]{lista_platas.get(i).getColor(), String.valueOf(lista_platas.get(i).getSuperficie())});
+        while (i < lista_maquinas.size()) {
+             model.addRow(new String[]{lista_maquinas.get(i).getMarca(), lista_maquinas.get(i).getModelo(), String.valueOf(lista_maquinas.get(i).getNumero()), lista_maquinas.get(i).getEstado()});
              i++;
         }
-        Table.setModel(model);
+        Tabla.setModel(model);
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         Background = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        Table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Tabla = new javax.swing.JTable();
 
-        Table.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel1.setText("Buscar");
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "Maquinas", "Procesos" }));
+
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        Tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -51,24 +70,7 @@ public class ConsultarPlanta extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(Table);
-
-        jLabel1.setText("Buscar");
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "Cant. Maquinas", "Cant. Procesos" }));
-
-        jButton1.setText("Volver");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jScrollPane1.setViewportView(Tabla);
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -131,13 +133,13 @@ public class ConsultarPlanta extends javax.swing.JPanel {
         Background.removeAll();
         Background.add(menu_consultar, BorderLayout.CENTER);
         Background.revalidate();
-        Background.repaint();
+        Background.repaint(); 
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
-    private javax.swing.JTable Table;
+    private javax.swing.JTable Tabla;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;

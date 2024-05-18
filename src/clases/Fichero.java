@@ -73,8 +73,9 @@ public class Fichero {
 
     public static void guardar_maquina(Maquina maquina){
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathMaquinas))) {
-                    writer.write(maquina.getEstado()+ DATA_SEPARATOR + maquina.getMarca()+ DATA_SEPARATOR + maquina.getModelo()+ DATA_SEPARATOR + maquina.getNumero() + DATA_SEPARATOR + "\n");
-                    //Guardar los opera
+                    writer.write(maquina.getMarca()+ DATA_SEPARATOR + maquina.getModelo()+ DATA_SEPARATOR + maquina.getNumero() + DATA_SEPARATOR + maquina.getEstado()+ DATA_SEPARATOR +"\n");
+                    writer.write(maquina.getPlanta().getColor() + DATA_SEPARATOR + maquina.getPlanta().getSuperficie() +DATA_SEPARATOR +"\n");
+                    writer.write(DATA_SEPARATOR +"\n");
             }
             catch (IOException e) {
                 System.out.println("Error" + e.getMessage());
@@ -108,7 +109,6 @@ public class Fichero {
         }
     }
 
-    
     public static void guardar_Opera(Opera opera){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathOperas))) {
                 writer.write(
@@ -150,7 +150,6 @@ public class Fichero {
             System.out.println("Error" + e.getMessage());
         }
     }
-    
     
     public static ArrayList<Planta> leerTodaslasPlantas(){
         ArrayList<Planta> lista_plantas = new ArrayList<>();
@@ -195,6 +194,44 @@ public class Fichero {
         return lista_plantas;
     }
 
+    public static ArrayList<Maquina> leerTodaslasMaquinas(){
+        ArrayList<Maquina> lista_maquinas = new ArrayList<>();
+        Maquina maquina= new Maquina();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                maquina.setMarca(datos[0]);
+                maquina.setModelo(datos[1]);
+                maquina.setNumero(Integer.parseInt(datos[2]));
+                maquina.setEstado(datos[3]);
+                lista_maquinas.add(maquina);
+                linea= br.readLine();
+                linea= br.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lista_maquinas;
+    }
+    
+    public static ArrayList<Proceso> leerTodaslosProcesos(){
+        ArrayList<Proceso> lista_procesos = new ArrayList<>();
+        Proceso proceso= new Proceso();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathProcesos))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                proceso.setNombre(datos[0]);
+                proceso.setComplejidad(datos[1]);
+                lista_procesos.add(proceso);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lista_procesos;
+    }
+    
     public static Boolean buscar_planta_por_color(Planta planta){
         String linea;
         try (BufferedReader br = new BufferedReader(new FileReader(pathPlantas))) {
@@ -211,6 +248,25 @@ public class Fichero {
         }
         return false;
     }
+    
+   /* public static void leerTodaslasMaquinas2(){
+        try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                System.out.println(
+                "Marca: " + datos[0]+ "\n" +
+                "Modelo: " + datos[1]+ "\n" +     
+                "Numero: " + datos[2]+ "\n" + 
+                "Estado: " + datos[3]+ "\n" +    
+                        "\n");
+                linea= br.readLine();
+                linea= br.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
     
 //-----------------------------------------------------TESTEO-------------------------------------------------------------//
     public static void leerTodaslasPlantas_consola(){

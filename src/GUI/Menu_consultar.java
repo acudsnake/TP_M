@@ -49,6 +49,11 @@ public class Menu_consultar extends javax.swing.JPanel {
         });
 
         jButton3.setText("Maquinas");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -111,6 +116,17 @@ public class Menu_consultar extends javax.swing.JPanel {
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        ConsultarMaquina consultarmaquina = new ConsultarMaquina();
+        consultarmaquina.setSize(736,449);
+        consultarmaquina.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(consultarmaquina, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
