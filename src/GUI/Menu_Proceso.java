@@ -111,7 +111,14 @@ public class Menu_Proceso extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        // TODO add your handling code here:
+        CrearProceso crearproceso = new CrearProceso();
+        crearproceso.setSize(736,449);
+        crearproceso.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(crearproceso, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
 
