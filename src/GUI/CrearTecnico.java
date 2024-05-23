@@ -3,52 +3,45 @@ package GUI;
 import clases.Fichero;
 import clases.Proceso;
 import clases.*;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
+import javax.swing.UIManager;
 
 public class CrearTecnico extends javax.swing.JPanel {
     public CrearTecnico() {
         initComponents();
-        //cargarPlantasEnTabla();
+        cargarTemaDatePicker(fieldFechaNac);
     }
-
-    /*public void cargarPlantasEnTabla() {
-        tablaPlantas.setDefaultRenderer(Object.class, new Render());
-        String [] columnas = new String[] {"Marca", "Modelo","Numero","Estado","Selecionado"};
-        boolean [] editable = {false, false, false, false, true};
-        Class[] types = new Class[] {
-            java.lang.Object.class, 
-            java.lang.Object.class, 
-            java.lang.Object.class, 
-            java.lang.Object.class,
-            java.lang.Boolean.class
-        };
-        
-        DefaultTableModel model_m = new DefaultTableModel(columnas, 0) {
-            public Class getColumnClass(int i){
-                return types[i];
-            }
-        
-            public boolean isCellEditable(int row, int column){
-                return editable[column];
-            }
-        };
-        
-        Object[] datos = new Object[columnas.length];    
-        ArrayList<Planta> listaPlantas = Fichero.leerTodaslasPlantas();
-        
-        for (int i = 0; i < listaPlantas.size(); i++){
-            Planta p = (Planta) listaPlantas.get(i);
-            datos[0] = String.valueOf(p.getColor());
-            datos[1] = String.valueOf(p.getSuperficie());
-            datos[2] = false;
-            model_m.addRow(datos);
-        }
-        tablaPlantas.setModel(model_m);
-       }*/
+    
+    /**
+     * Por defecto, usa el tema blanco de Swing, con este metodo va a usar los colores del tema de FlatLaf :)
+     */
+    private void cargarTemaDatePicker(DatePicker datePicker) {
+        DatePickerSettings settings = new DatePickerSettings();
+        settings.setColor(DateArea.CalendarBackgroundNormalDates, UIManager.getColor("Panel.background"));
+        settings.setColor(DateArea.CalendarBackgroundNormalDates, UIManager.getColor("Panel.background"));
+        settings.setColor(DateArea.BackgroundOverallCalendarPanel, UIManager.getColor("Panel.background"));
+        settings.setColor(DateArea.TextFieldBackgroundValidDate, UIManager.getColor("TextField.background"));
+        settings.setColor(DateArea.CalendarBackgroundSelectedDate, UIManager.getColor("Table.selectionBackground"));
+        settings.setColor(DateArea.BackgroundTopLeftLabelAboveWeekNumbers, UIManager.getColor("Label.background"));
+        settings.setColor(DateArea.BackgroundMonthAndYearMenuLabels, UIManager.getColor("Label.background"));
+        settings.setColor(DateArea.BackgroundTodayLabel, UIManager.getColor("Label.background"));
+        settings.setColor(DateArea.BackgroundClearLabel, UIManager.getColor("Button.background"));
+        settings.setColor(DateArea.CalendarTextNormalDates, UIManager.getColor("Label.foreground"));
+        settings.setColor(DateArea.CalendarBorderSelectedDate, UIManager.getColor("Table.selectionBackground").darker());
+        settings.setColor(DateArea.BackgroundCalendarPanelLabelsOnHover, UIManager.getColor("ComboBox.buttonHighlight"));
+        settings.setColor(DateArea.CalendarTextWeekdays, UIManager.getColor("Button.foreground"));
+        settings.setColorBackgroundWeekdayLabels(UIManager.getColor("Button.background"), true);
+        settings.setColor(DateArea.DatePickerTextValidDate, UIManager.getColor("TextField.foreground"));
+ 
+        datePicker.setSettings(settings);
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -64,10 +57,10 @@ public class CrearTecnico extends javax.swing.JPanel {
         fieldApellido = new javax.swing.JTextField();
         fieldDni = new javax.swing.JTextField();
         fieldContacto = new javax.swing.JTextField();
-        fechaNacField = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        fieldFechaNac = new com.github.lgooddatepicker.components.DatePicker();
 
         jToggleButton1.setText("jToggleButton1");
 
@@ -113,12 +106,6 @@ public class CrearTecnico extends javax.swing.JPanel {
             }
         });
 
-        fechaNacField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fechaNacFieldActionPerformed(evt);
-            }
-        });
-
         jLabel3.setText("Fecha de nacimiento");
 
         jLabel4.setText("DNI");
@@ -142,28 +129,27 @@ public class CrearTecnico extends javax.swing.JPanel {
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(BackgroundLayout.createSequentialGroup()
                         .addGap(74, 74, 74)
-                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(BackgroundLayout.createSequentialGroup()
+                                    .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel3))
+                                    .addGap(23, 23, 23))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, BackgroundLayout.createSequentialGroup()
+                                    .addComponent(jLabel5)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(BackgroundLayout.createSequentialGroup()
                                 .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(fieldDni, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(BackgroundLayout.createSequentialGroup()
-                                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(BackgroundLayout.createSequentialGroup()
-                                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel1)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel3))
-                                        .addGap(23, 23, 23))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, BackgroundLayout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(fieldApellido)
-                                    .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(fieldContacto, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(fechaNacField))))
-                        .addGap(0, 416, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)))
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(fieldDni, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fieldNombre, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fieldApellido, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fieldContacto)
+                            .addComponent(fieldFechaNac, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(44, 44, 44)))
                 .addContainerGap())
         );
         BackgroundLayout.setVerticalGroup(
@@ -171,7 +157,7 @@ public class CrearTecnico extends javax.swing.JPanel {
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(botonVolver)
-                .addGap(139, 139, 139)
+                .addGap(145, 145, 145)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(fieldNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -181,8 +167,8 @@ public class CrearTecnico extends javax.swing.JPanel {
                     .addComponent(fieldApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fechaNacField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(fieldFechaNac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fieldDni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -191,7 +177,7 @@ public class CrearTecnico extends javax.swing.JPanel {
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fieldContacto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
                 .addComponent(botonGuardar)
                 .addContainerGap())
         );
@@ -207,10 +193,6 @@ public class CrearTecnico extends javax.swing.JPanel {
             .addComponent(Background, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void fechaNacFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaNacFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fechaNacFieldActionPerformed
 
     private void fieldContactoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldContactoActionPerformed
         // TODO add your handling code here:
@@ -233,21 +215,8 @@ public class CrearTecnico extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         
-        Tecnico t = new Tecnico(fieldNombre.getText(), fieldApellido.getText(), Integer.parseInt(fieldDni.getText()), fieldContacto.getText(), LocalDate.of(2024, 1, 1), new Opera(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1), 1));
+        Tecnico t = new Tecnico(fieldNombre.getText(), fieldApellido.getText(), Integer.parseInt(fieldDni.getText()), fieldContacto.getText(), fieldFechaNac.getDate(), new Opera(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1), 1));
 
-        //ArrayList<Planta> plantas = new ArrayList<>();
-
-        //for(int i = 0; i < tablaPlantas.getRowCount(); i++) {
-            //    Planta p = new Planta();
-            //    if (String.valueOf(tablaPlantas.getValueAt(i, 3)).equals("true")) {
-                //        p.setColor((String) tablaPlantas.getValueAt(i, 1));
-                //        p.setSuperficie((int) tablaPlantas.getValueAt(i, 0));
-                //        plantas.add(p);
-                //    }
-            //}
-
-        // Todo: Falta ver como guardar las plantas
-        //Fichero.guardar_plantas(plantas);
         Fichero.guardar_tecnico(t);
         JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_botonGuardarActionPerformed
@@ -268,10 +237,10 @@ public class CrearTecnico extends javax.swing.JPanel {
     private javax.swing.JPanel Background;
     private javax.swing.JButton botonGuardar;
     private javax.swing.JButton botonVolver;
-    private javax.swing.JTextField fechaNacField;
     private javax.swing.JTextField fieldApellido;
     private javax.swing.JTextField fieldContacto;
     private javax.swing.JTextField fieldDni;
+    private com.github.lgooddatepicker.components.DatePicker fieldFechaNac;
     private javax.swing.JTextField fieldNombre;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
