@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -731,5 +732,36 @@ public class Fichero {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public static ArrayList<Tecnico> leerTecnicos(){
+        ArrayList<Tecnico> tecnicos = new ArrayList<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(pathTecnicos))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                
+                final int NUM_ATRIBUTOS_TECNICO = 5; // Nombre, apellido, fecha, dni, contacto...
+                
+                if (datos.length != NUM_ATRIBUTOS_TECNICO) {
+                    throw new IllegalArgumentException("Error: La linea de este tecnico no contiene todos los atributos necesarios.");
+                }
+                
+                Tecnico t = new Tecnico();
+                
+                // TODO: Faltaria una validacion de los tipos de los datos
+                t.setNombre(datos[0]);
+                t.setApellido(datos[1]);
+                t.setFechaNacimiento(LocalDate.parse(datos[2]));
+                t.setDNI(Integer.parseInt(datos[3]));
+                t.setContacto(datos[4]);
+                
+                tecnicos.add(t);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tecnicos;
     }
 }
