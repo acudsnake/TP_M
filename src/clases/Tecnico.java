@@ -8,7 +8,11 @@ public class Tecnico {
     private String contacto;
     private LocalDate fechaNacimiento;
     private Opera opera;
-
+    
+    public Tecnico() {
+        
+    }
+    
     public Tecnico(String nombre, String apellido,int DNI, String contacto, LocalDate fechaNacimiento, Opera opera) {
         this.nombre = nombre;
         this.apellido = apellido;
