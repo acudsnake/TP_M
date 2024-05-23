@@ -64,6 +64,9 @@ public class CrearTecnico extends javax.swing.JPanel {
 
         jToggleButton1.setText("jToggleButton1");
 
+        Background.setPreferredSize(new java.awt.Dimension(748, 519));
+        Background.setRequestFocusEnabled(false);
+
         botonVolver.setText("Volver");
         botonVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -137,9 +140,7 @@ public class CrearTecnico extends javax.swing.JPanel {
                                         .addComponent(jLabel2)
                                         .addComponent(jLabel3))
                                     .addGap(23, 23, 23))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, BackgroundLayout.createSequentialGroup()
-                                    .addComponent(jLabel5)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
                             .addGroup(BackgroundLayout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)))
