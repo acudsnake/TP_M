@@ -38,13 +38,28 @@ public class Menu_Proceso extends javax.swing.JPanel {
         });
 
         jToggleButton3.setText("Editar");
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
+            }
+        });
 
         jToggleButton2.setText("Eliminar");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Gestionar Proceso");
 
         jToggleButton4.setText("Consultar");
+        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -111,7 +126,7 @@ public class Menu_Proceso extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        CrearProceso crearproceso = new CrearProceso();
+        CrearProceso crearproceso= new CrearProceso();
         crearproceso.setSize(736,449);
         crearproceso.setLocation(0,0);
         Background.setLayout(new BorderLayout());
@@ -120,6 +135,39 @@ public class Menu_Proceso extends javax.swing.JPanel {
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
+        ConsultarProceso consultarproceso= new ConsultarProceso();
+        consultarproceso.setSize(736,449);
+        consultarproceso.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(consultarproceso, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
+
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        ConsultarProcesoparaEditar consultarprocesoparaeditar= new ConsultarProcesoparaEditar();
+        consultarprocesoparaeditar.setSize(736,449);
+        consultarprocesoparaeditar.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(consultarprocesoparaeditar, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        EliminarProceso eliminarproceso= new EliminarProceso();
+        eliminarproceso.setSize(736,449);
+        eliminarproceso.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(eliminarproceso, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

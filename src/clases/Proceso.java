@@ -13,7 +13,6 @@ public class Proceso {
     public Proceso(String nombre, String complejidad) {
         this.nombre = nombre;
         this.complejidad = complejidad;
-        this.planta = new ArrayList<>();
     }
     
     public String getNombre() {

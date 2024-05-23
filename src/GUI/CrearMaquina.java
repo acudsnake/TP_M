@@ -201,14 +201,14 @@ public class CrearMaquina extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_Planta menu_agregar= new Menu_Planta();
-        menu_agregar.setSize(736,449);
-        menu_agregar.setLocation(0,0);
+        Menu_Maquina menu_maquina= new Menu_Maquina();
+        menu_maquina.setSize(736,449);
+        menu_maquina.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_agregar, BorderLayout.CENTER);
+        Background.add(menu_maquina, BorderLayout.CENTER);
         Background.revalidate();
-        Background.repaint();
+        Background.repaint(); 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void MarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MarcaActionPerformed
@@ -217,7 +217,7 @@ public class CrearMaquina extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         if(Marca.getText().isEmpty() || Modelo.getText().isEmpty() || Numero.getText().isEmpty() || Estado.getText().isEmpty()){
-        JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         else{
         int seleccion=0;

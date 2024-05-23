@@ -45,6 +45,11 @@ public class Menu_Planta extends javax.swing.JPanel {
         });
 
         jToggleButton2.setText("Eliminar");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Gestionar Planta");
@@ -152,6 +157,17 @@ public class Menu_Planta extends javax.swing.JPanel {
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        EliminarPlanta eliminarplanta= new EliminarPlanta();
+        eliminarplanta.setSize(736,449);
+        eliminarplanta.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(eliminarplanta, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

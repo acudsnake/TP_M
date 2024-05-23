@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 public class EditarPlanta extends javax.swing.JPanel {
+        Planta p_vieja =new Planta();
     public EditarPlanta(Planta planta) {
         initComponents();
         p_vieja=planta;
@@ -17,8 +18,8 @@ public class EditarPlanta extends javax.swing.JPanel {
         Color.setText(p_vieja.getColor());
         Superficie.setText(String.valueOf(p_vieja.getSuperficie()));
     }
-       Planta p_nueva =new Planta();
-    Planta p_vieja =new Planta();
+    //Planta p_nueva =new Planta();
+
 
     public void imprimir_tabla_maquinas(Planta p){
         Tabla_maquinas.setDefaultRenderer(Object.class, new Render());
@@ -269,30 +270,31 @@ public class EditarPlanta extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         else{
-        Planta p= new Planta(Color.getText(), Integer.parseInt(Superficie.getText()));
-        Maquina m = new Maquina();
-        Proceso pr= new Proceso();
+        Planta p_nueva= new Planta(Color.getText(), Integer.parseInt(Superficie.getText()));
+        
+        
         ArrayList<Maquina> maquinas= new ArrayList<>();
         ArrayList<Proceso> procesos= new ArrayList<>();
         for(int i=0; i<Tabla_maquinas.getRowCount(); i++){
-            if(String.valueOf(Tabla_maquinas.getValueAt(i, 4))=="true"){
-                m.setMarca((String) Tabla_maquinas.getValueAt(i, 0));
-                m.setModelo((String) Tabla_maquinas.getValueAt(i, 1));
-                m.setNumero((int) Tabla_maquinas.getValueAt(i, 2));
-                m.setEstado((String) Tabla_maquinas.getValueAt(i, 3));
+            if((Boolean) Tabla_maquinas.getValueAt(i, 4)){
+                Maquina m = new Maquina((String) Tabla_maquinas.getValueAt(i, 0),
+                        (String) Tabla_maquinas.getValueAt(i, 1),
+                        (int) Tabla_maquinas.getValueAt(i, 2),
+                        (String) Tabla_maquinas.getValueAt(i, 3)
+                );
                 maquinas.add(m);
             }
         }
         for(int i=0; i<Tabla_procesos.getRowCount(); i++){
-            if(String.valueOf(Tabla_procesos.getValueAt(i, 2))=="true"){
-                pr.setNombre((String) Tabla_procesos.getValueAt(i, 0));
-                pr.setComplejidad((String) Tabla_procesos.getValueAt(i, 1));
+            if((Boolean) Tabla_procesos.getValueAt(i, 2)){
+                Proceso pr= new Proceso((String) Tabla_procesos.getValueAt(i, 0), (String) Tabla_procesos.getValueAt(i, 1)  );
                 procesos.add(pr);
             }
         }
-        p.setMaquina(maquinas);
-        p.setProceso(procesos);
-        Fichero.guardar_planta(p);
+        p_nueva.setMaquina(maquinas);
+        p_nueva.setProceso(procesos);
+        Fichero.modificarPlanta(p_nueva, p_vieja);
+        
         JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         

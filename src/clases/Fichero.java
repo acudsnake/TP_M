@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -71,11 +70,277 @@ public class Fichero {
             }
         }
 
+    public static void modificarPlanta(Planta p_nueva, Planta p_vieja){
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathPlantas));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
+
+            String lineaActual;
+            String[] datos;
+            while ((lineaActual = reader.readLine()) != null) {
+                datos = lineaActual.split(DATA_SEPARATOR);
+                if((datos[0].equals(p_vieja.getColor())) && (Integer.parseInt(datos[1])==p_vieja.getSuperficie())   ){
+                    writer.write(p_nueva.getColor() + DATA_SEPARATOR + p_nueva.getSuperficie()+ DATA_SEPARATOR + "\n");
+                    if(!p_nueva.getMaquina().isEmpty()){
+                        for (Maquina maquina : p_nueva.getMaquina()) {
+                            writer.write(maquina.getMarca() + DATA_SEPARATOR + maquina.getModelo() + DATA_SEPARATOR + maquina.getNumero() + DATA_SEPARATOR + maquina.getEstado() + DATA_SEPARATOR);
+
+                        }
+                        writer.write("\n");
+                        System.out.print("Entraste a procesos" + "\n");
+                    }
+                    else{
+                        writer.write("-" + "\n");
+                    }
+                    if(!p_nueva.getProceso().isEmpty()){
+                        System.out.print("Entraste a procesos" + "\n");
+                        for (Proceso proceso : p_nueva.getProceso()) {
+                            writer.write(proceso.getNombre()+ DATA_SEPARATOR + proceso.getComplejidad()+ DATA_SEPARATOR);
+                        }
+                        writer.write("\n");
+                    }
+                    else
+                        writer.write("-" + "\n");
+                    
+                    reader.readLine(); //maquinas
+                    reader.readLine(); //procesos
+                }
+                else{
+                writer.write(lineaActual); //planta
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //maquinas
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //procesos
+                writer.newLine();
+                }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File originalFile = new File(pathPlantas);
+        File temporalFile = new File(pathTemp);
+        originalFile.delete();
+        temporalFile.renameTo(originalFile);
+        
+        
+        //Realizar cambios en maquinas.txt
+        if(p_nueva.getMaquina().isEmpty()){
+            for(int i=0; i<p_vieja.getMaquina().size(); i++)
+                Fichero.eliminarMaquina(p_vieja.getMaquina().get(i));     
+        }
+        else{
+            for(int i=0; i<p_vieja.getMaquina().size(); i++){
+                if(!p_nueva.getMaquina().contains(p_vieja.getMaquina().get(i)))
+                    Fichero.eliminarMaquina(p_vieja.getMaquina().get(i));
+            }
+        }
+            
+        //Realizar cambios en procesos.txt
+
+        if(p_nueva.getProceso().isEmpty()){
+            for(int i=0; i<p_vieja.getProceso().size(); i++){
+
+                //FUNCIONA 
+                if((Fichero.buscar_proceso(p_vieja.getProceso().get(i)).getPlanta().size())!=1){
+                    Proceso aux_v=Fichero.buscar_proceso(p_vieja.getProceso().get(i));
+                    Proceso aux_n=Fichero.buscar_proceso(p_vieja.getProceso().get(i));
+                    
+                    ArrayList<Planta> plantas = new ArrayList<>();
+                    for(int i2=0; i2<aux_n.getPlanta().size(); i2++){
+                        if( !((aux_n.getPlanta().get(i2).getColor().equals(p_vieja.getColor())) && (aux_n.getPlanta().get(i2).getSuperficie()==(p_vieja.getSuperficie()))) )
+                            plantas.add(aux_n.getPlanta().get(i2));
+                    }
+                    aux_n.setPlanta(plantas);
+                    
+                    Fichero.modificarProceso(aux_n, aux_v);
+
+                }
+                // FUNCIONA
+                else{
+                    Fichero.eliminarProceso(p_vieja.getProceso().get(i));
+                }
+                    
+            }
+                
+        }
+        else{
+            for(int i=0; i<p_vieja.getProceso().size(); i++){
+                if(!p_nueva.getProceso().contains(p_vieja.getProceso().get(i))){
+                    
+                    //FUNCIONA 
+                    if((Fichero.buscar_proceso(p_vieja.getProceso().get(i)).getPlanta().size())!=1){
+                        Proceso aux_v=Fichero.buscar_proceso(p_vieja.getProceso().get(i));
+                        Proceso aux_n=Fichero.buscar_proceso(p_vieja.getProceso().get(i));
+                        ArrayList<Planta> plantas = new ArrayList<>();
+                        for(int i2=0; i2<aux_n.getPlanta().size(); i2++){
+                            if( !((aux_n.getPlanta().get(i2).getColor().equals(p_vieja.getColor())) && (aux_n.getPlanta().get(i2).getSuperficie()==(p_vieja.getSuperficie()))) )
+                                plantas.add(aux_n.getPlanta().get(i2));
+                        }
+                        aux_n.setPlanta(plantas);
+                        Fichero.modificarProceso(aux_n, aux_v);
+
+                    }
+                    //FUNCIONA
+                    else
+                        Fichero.eliminarProceso(p_vieja.getProceso().get(i));
+                
+                }
+                    
+            }
+        }
+        
+    }
+  
+    public static void modificarMaquina(Planta p_nueva, Planta p_vieja){
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathPlantas));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
+            String lineaActual;
+            String lineaNueva_planta = p_nueva.getColor() + DATA_SEPARATOR + p_nueva.getSuperficie();
+            String[] datos;
+            while ((lineaActual = reader.readLine()) != null) {
+                datos = lineaActual.split(DATA_SEPARATOR);
+                if(datos[0].equals(p_vieja.getColor()) /*&& datos[1].equals(p_vieja.getSuperficie())*/){
+                    writer.write(p_nueva.getColor() + DATA_SEPARATOR + p_nueva.getSuperficie()+ DATA_SEPARATOR + "\n");
+     
+                    if(!p_nueva.getMaquina().isEmpty()){
+                        for (Maquina maquina : p_nueva.getMaquina()) {
+                            writer.write(maquina.getMarca() + DATA_SEPARATOR + maquina.getModelo() + DATA_SEPARATOR + maquina.getNumero() + DATA_SEPARATOR + maquina.getEstado() + DATA_SEPARATOR);
+                        }
+                        writer.write("\n");
+                    }
+                    else
+                        writer.write("-" + "\n");
+                    
+                    if(!p_nueva.getProceso().isEmpty()){
+                        for (Proceso proceso : p_nueva.getProceso()) {
+                            writer.write(proceso.getNombre()+ DATA_SEPARATOR + proceso.getComplejidad()+ DATA_SEPARATOR);
+                        }
+                        writer.write("\n");
+                    }
+                    else
+                        writer.write("-" + "\n");
+                    
+                    reader.readLine(); //maquinas
+                    reader.readLine(); //procesos
+                    
+                }
+                    
+                else{
+                writer.write(lineaActual); //planta
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //maquinas
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //procesos
+                writer.newLine();
+                }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File originalFile = new File(pathPlantas);
+        File temporalFile = new File(pathTemp);
+        originalFile.delete();
+        temporalFile.renameTo(originalFile);
+        
+        
+        //Realizar cambios en maquinas.txt
+        //Realizar cambios en procesos.txt
+    }
+  
+    public static void eliminarPlanta(Planta p){
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathPlantas));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
+            // Leer todas las personas del archivo personas.txt
+            String lineaActual;  
+            String[] datos;
+            
+            while ((lineaActual = reader.readLine()) != null) {
+                datos = lineaActual.split(DATA_SEPARATOR);
+                if(datos[0].equals(p.getColor()) /*&& datos[1].equals(p_vieja.getSuperficie())*/){
+                    reader.readLine(); //maquinas
+                    reader.readLine(); //procesos
+                    
+                }
+                else{
+                writer.write(lineaActual); //planta
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //maquinas
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //procesos
+                writer.newLine();
+                }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Finalmente hacer el swap..
+        File originalFile = new File(pathPlantas);
+        File temporalFile = new File(pathTemp);
+        // borrar archivo viejo
+        originalFile.delete();
+        // reemplazar nombre del temporal con el nombre original
+        temporalFile.renameTo(originalFile);
+        
+        
+        //Realizar cambios en maquinas.txt
+        //Realizar cambios en procesos.txt
+    }
+    
+    
+       public static void eliminarMaquina(Maquina m){
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathMaquinas));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
+            String lineaActual;  
+            String[] datos;
+            while ((lineaActual = reader.readLine()) != null) {
+                datos = lineaActual.split(DATA_SEPARATOR); //maquina
+                if((datos[0].equals(m.getMarca())) && (datos[1].equals(m.getModelo())) && (Integer.parseInt(datos[2])==(m.getNumero())) && (datos[3].equals(m.getEstado()))){
+                    //eliminar o finaliza opera
+                    System.out.print("Entraste a eliminar maquina");
+                    reader.readLine(); //Planta
+                    reader.readLine(); //Opera
+                }
+                else{
+                writer.write(lineaActual); //Maquina
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //Planta
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //Opera
+                writer.newLine();
+                }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }   
+        File originalFile = new File(pathMaquinas);
+        File temporalFile = new File(pathTemp);
+        // borrar archivo viejo
+        originalFile.delete();
+        // reemplazar nombre del temporal con el nombre original
+        temporalFile.renameTo(originalFile);
+        
+    }
+    
+    
+    
     public static void guardar_maquina(Maquina maquina){
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathMaquinas, true))) {
                     writer.write(maquina.getMarca()+ DATA_SEPARATOR + maquina.getModelo()+ DATA_SEPARATOR + maquina.getNumero() + DATA_SEPARATOR + maquina.getEstado()+ DATA_SEPARATOR +"\n");
                     writer.write(maquina.getPlanta().getColor() + DATA_SEPARATOR + maquina.getPlanta().getSuperficie() +DATA_SEPARATOR +"\n");
-                    writer.write(DATA_SEPARATOR +"\n");
+                    writer.write(DATA_SEPARATOR +"\n"); //opera
             }
             catch (IOException e) {
                 System.out.println("Error" + e.getMessage());
@@ -98,6 +363,82 @@ public class Fichero {
             System.out.println("Error" + e.getMessage());
         }
     }
+    
+    public static void modificarProceso(Proceso p_nueva, Proceso p_vieja){
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathProcesos));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
+            String lineaActual;
+            String[] datos;
+            
+            while ((lineaActual = reader.readLine()) != null) {
+                datos = lineaActual.split(DATA_SEPARATOR);
+                if((datos[0].equals(p_vieja.getNombre())) && (datos[1].equals(p_vieja.getComplejidad()))){
+                    writer.write(p_nueva.getNombre() + DATA_SEPARATOR + p_nueva.getNombre()+ DATA_SEPARATOR + "\n");
+                    if(!p_nueva.getPlanta().isEmpty()){
+                        for (Planta planta : p_nueva.getPlanta()) {
+                            writer.write(planta.getColor() + DATA_SEPARATOR + planta.getSuperficie()+ DATA_SEPARATOR);
+                        }
+                        writer.write("\n");
+                    }
+                    else
+                        writer.write("-" + "\n");
+                    
+                    reader.readLine(); //plantas
+                    
+                }
+                    
+                else{
+                writer.write(lineaActual); //proceso
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //plantas
+                writer.newLine();
+                }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File originalFile = new File(pathProcesos);
+        File temporalFile = new File(pathTemp);
+        originalFile.delete();
+        temporalFile.renameTo(originalFile);
+    }
+
+    public static void eliminarProceso(Proceso p/*, Maquina m_nueva, Maquina m_vieja/*, Proceso pr_nueva, Proceso pr_vieja*/){
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathProcesos));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
+                String lineaActual;
+                String[] datos;
+            
+            while ((lineaActual = reader.readLine()) != null) {
+                datos = lineaActual.split(DATA_SEPARATOR);
+                if((datos[0].equals(p.getNombre())) && (datos[1].equals(p.getComplejidad()))){
+                    reader.readLine(); //plantas
+                }
+                else{
+                writer.write(lineaActual); //proceso
+                writer.newLine();
+                lineaActual=reader.readLine();
+                writer.write(lineaActual); //plantas
+                writer.newLine();
+                }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File originalFile = new File(pathProcesos);
+        File temporalFile = new File(pathTemp);
+        originalFile.delete();
+        temporalFile.renameTo(originalFile);
+    }
+
+    
+    
+    
     
     public static void guardar_tecnico(Tecnico tecnico){
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathTecnicos, true))) {
@@ -176,8 +517,8 @@ public class Fichero {
                 String[] procesos = linea.split(DATA_SEPARATOR);
                 if(!"-".equals(procesos[0])){
                     for (int i=0; i < procesos.length; i=i+2){
-                        proceso.setNombre(procesos[0]);
-                        proceso.setComplejidad(procesos[1]);
+                        proceso.setNombre(procesos[i]);
+                        proceso.setComplejidad(procesos[i+1]);
                         lista_procesos.add(proceso);
                     }
                 } 
@@ -196,15 +537,12 @@ public class Fichero {
     
     public static ArrayList<Maquina> leerTodaslasMaquinas(){
         ArrayList<Maquina> lista_maquinas = new ArrayList<>();
-        Maquina maquina= new Maquina();
+        
         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
             String linea;
             while ((linea = br.readLine()) != null){
                 String[] datos = linea.split(DATA_SEPARATOR);
-                maquina.setMarca(datos[0]);
-                maquina.setModelo(datos[1]);
-                maquina.setNumero(Integer.parseInt(datos[2]));
-                maquina.setEstado(datos[3]);
+                Maquina maquina= new Maquina(datos[0], datos[1], Integer.parseInt(datos[2]), datos[3]);
                 lista_maquinas.add(maquina);
                 linea= br.readLine();
                 linea= br.readLine();
@@ -217,14 +555,26 @@ public class Fichero {
     
     public static ArrayList<Proceso> leerTodaslosProcesos(){
         ArrayList<Proceso> lista_procesos = new ArrayList<>();
-        Proceso proceso= new Proceso();
+        ArrayList<Planta> lista_plantas = new ArrayList<>();
+        
+        Planta p = new Planta();
         try (BufferedReader br = new BufferedReader(new FileReader(pathProcesos))) {
             String linea;
             while ((linea = br.readLine()) != null){
                 String[] datos = linea.split(DATA_SEPARATOR);
-                proceso.setNombre(datos[0]);
-                proceso.setComplejidad(datos[1]);
+                linea= br.readLine();
+                String[] plantas = linea.split(DATA_SEPARATOR);
+                if(!"-".equals(plantas[0])){
+                    for (int i=0; i < plantas.length; i=i+2){
+                        p.setColor(plantas[i]);
+                        p.setSuperficie(Integer.parseInt(plantas[i+1]));
+                        lista_plantas.add(p);
+                    }
+                } 
+                Proceso proceso= new Proceso(datos[0], datos[1]);
+                proceso.setPlanta(lista_plantas);
                 lista_procesos.add(proceso);
+                lista_plantas.clear();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -237,9 +587,7 @@ public class Fichero {
         Planta p = new Planta();
         ArrayList<Maquina> lista_maquinas = new ArrayList<>();
         ArrayList<Proceso> lista_procesos = new ArrayList<>();
-        Proceso proceso = new Proceso();
-        Maquina maquina = new Maquina();
-        
+       
         try (BufferedReader br = new BufferedReader(new FileReader(pathPlantas))) {
            while((linea=br.readLine()) !=null){
                String[] datos = linea.split(DATA_SEPARATOR);
@@ -253,21 +601,17 @@ public class Fichero {
                    
                    if(!maquinas[0].equals("-")){
                         for (int i=0; i < maquinas.length; i=i+4){
-                            maquina.setMarca(maquinas[i]);
-                            maquina.setModelo(maquinas[i+1]);
-                            maquina.setNumero(Integer.parseInt(maquinas[i+2]));
-                            maquina.setEstado(maquinas[i+3]);
+                            Maquina maquina = new Maquina(maquinas[i], maquinas[i+1], Integer.parseInt(maquinas[i+2]), maquinas[i+3]);
                             lista_maquinas.add(maquina);
                         }}
                     if(!"-".equals(procesos[0])){
                     for (int i=0; i < procesos.length; i=i+2){
-                        proceso.setNombre(procesos[0]);
-                        proceso.setComplejidad(procesos[1]);
+                        Proceso proceso = new Proceso(procesos[i], procesos[i+1]);
                         lista_procesos.add(proceso);
                     }
                     } 
-                planta.setMaquina(lista_maquinas);
-                planta.setProceso(lista_procesos);
+                p.setMaquina(lista_maquinas);
+                p.setProceso(lista_procesos);
                 return p;
                }
            }
@@ -277,6 +621,37 @@ public class Fichero {
         }
         return null;
     }
+    
+    public static Proceso buscar_proceso(Proceso proceso){
+        String linea;
+        
+        ArrayList<Planta> lista_planta = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathProcesos))) {
+           while((linea=br.readLine()) !=null){
+               
+               String[] datos = linea.split(DATA_SEPARATOR);
+               linea= br.readLine();
+               String[] plantas = linea.split(DATA_SEPARATOR);
+
+               if(datos[0].equals(proceso.getNombre()) && datos[1].equals(proceso.getComplejidad())){
+                   Proceso p = new Proceso(datos[0], datos[1]);
+                   if(!plantas[0].equals("-")){
+                        for (int i=0; i < plantas.length; i=i+2){
+                            Planta planta = new Planta(plantas[i], Integer.parseInt(plantas[i+1]));
+                            lista_planta.add(planta);
+                        }}
+                p.setPlanta(lista_planta);
+                //operas
+                return p;
+               }
+           }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     
    /* public static void leerTodaslasMaquinas2(){
         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
@@ -356,36 +731,5 @@ public class Fichero {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    
-    public static ArrayList<Tecnico> leerTecnicos(){
-        ArrayList<Tecnico> tecnicos = new ArrayList<>();
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(pathTecnicos))) {
-            String linea;
-            while ((linea = br.readLine()) != null){
-                String[] datos = linea.split(DATA_SEPARATOR);
-                
-                final int NUM_ATRIBUTOS_TECNICO = 5; // Nombre, apellido, fecha, dni, contacto...
-                
-                if (datos.length != NUM_ATRIBUTOS_TECNICO) {
-                    throw new IllegalArgumentException("Error: La linea de este tecnico no contiene todos los atributos necesarios.");
-                }
-                
-                Tecnico t = new Tecnico();
-                
-                // TODO: Faltaria una validacion de los tipos de los datos
-                t.setNombre(datos[0]);
-                t.setApellido(datos[1]);
-                t.setFechaNacimiento(LocalDate.parse(datos[2]));
-                t.setDNI(Integer.parseInt(datos[3]));
-                t.setContacto(datos[4]);
-                
-                tecnicos.add(t);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tecnicos;
     }
 }

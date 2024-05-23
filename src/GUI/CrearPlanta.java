@@ -266,23 +266,26 @@ public class CrearPlanta extends javax.swing.JPanel {
         }
         else{
         Planta p= new Planta(Color.getText(), Integer.parseInt(Superficie.getText()));
-        Maquina m = new Maquina();
-        Proceso pr= new Proceso();
+        
+        
         ArrayList<Maquina> maquinas= new ArrayList<>();
         ArrayList<Proceso> procesos= new ArrayList<>();
         for(int i=0; i<Tabla_maquinas.getRowCount(); i++){
-            if(String.valueOf(Tabla_maquinas.getValueAt(i, 4))=="true"){
-                m.setMarca((String) Tabla_maquinas.getValueAt(i, 0));
-                m.setModelo((String) Tabla_maquinas.getValueAt(i, 1));
-                m.setNumero((int) Tabla_maquinas.getValueAt(i, 2));
-                m.setEstado((String) Tabla_maquinas.getValueAt(i, 3));
+            if((Boolean) Tabla_maquinas.getValueAt(i, 4)){
+                Maquina m = new Maquina(
+                        (String) Tabla_maquinas.getValueAt(i, 0), 
+                        (String) Tabla_maquinas.getValueAt(i, 1),
+                        (int) Tabla_maquinas.getValueAt(i, 2), 
+                        (String) Tabla_maquinas.getValueAt(i, 3));
                 maquinas.add(m);
             }
         }
         for(int i=0; i<Tabla_procesos.getRowCount(); i++){
-            if(String.valueOf(Tabla_procesos.getValueAt(i, 2))=="true"){
-                pr.setNombre((String) Tabla_procesos.getValueAt(i, 0));
-                pr.setComplejidad((String) Tabla_procesos.getValueAt(i, 1));
+            if((Boolean) Tabla_procesos.getValueAt(i, 2)){
+                Proceso pr= new Proceso(
+                        (String) Tabla_procesos.getValueAt(i, 0),
+                        (String) Tabla_procesos.getValueAt(i, 1)
+                );
                 procesos.add(pr);
             }
         }

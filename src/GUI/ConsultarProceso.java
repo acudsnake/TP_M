@@ -1,27 +1,27 @@
 package GUI;
 import clases.Fichero;
 import clases.Planta;
+import clases.Proceso;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
-
-public class ConsultarPlanta extends javax.swing.JPanel {
+public class ConsultarProceso extends javax.swing.JPanel {
     DefaultTableModel model = new DefaultTableModel();
     
-    public ConsultarPlanta() {
+    public ConsultarProceso() {
         initComponents();
-        model.addColumn("Color");
-        model.addColumn("Superficie");
+        model.addColumn("Nombre");
+        model.addColumn("Complejidad");
         imprimir_tabla();
     }
 
     public void imprimir_tabla(){
         model.setRowCount(0);
-        ArrayList<Planta> lista_platas= Fichero.leerTodaslasPlantas();
+        ArrayList<Proceso> lista_proceso= Fichero.leerTodaslosProcesos();
         int i=0;
-        while (i < lista_platas.size()) {
-             model.addRow(new String[]{lista_platas.get(i).getColor(), String.valueOf(lista_platas.get(i).getSuperficie())});
+        while (i < lista_proceso.size()) {
+             model.addRow(new String[]{lista_proceso.get(i).getNombre(), lista_proceso.get(i).getComplejidad()});
              i++;
         }
         Table.setModel(model);
@@ -123,12 +123,12 @@ public class ConsultarPlanta extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_Planta menu_planta= new Menu_Planta();
-        menu_planta.setSize(736,449);
-        menu_planta.setLocation(0,0);
+        Menu_Proceso menu_proceso= new Menu_Proceso();
+        menu_proceso.setSize(736,449);
+        menu_proceso.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_planta, BorderLayout.CENTER);
+        Background.add(menu_proceso, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed

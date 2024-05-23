@@ -38,6 +38,11 @@ public class Menu_Maquina extends javax.swing.JPanel {
         });
 
         jToggleButton3.setText("Editar");
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
+            }
+        });
 
         jToggleButton2.setText("Consultar");
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -50,6 +55,11 @@ public class Menu_Maquina extends javax.swing.JPanel {
         jLabel1.setText("Gestionar Maquina");
 
         jToggleButton4.setText("Eliminar");
+        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -135,6 +145,21 @@ public class Menu_Maquina extends javax.swing.JPanel {
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
+
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
+        EliminarMaquina eliminar_maquina= new EliminarMaquina();
+        eliminar_maquina.setSize(736,449);
+        eliminar_maquina.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(eliminar_maquina, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

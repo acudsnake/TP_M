@@ -1,6 +1,6 @@
-Azul,334,
-3,3,3,3,
-ong, muh fasi mano,
-Rojo,111,
-3,3,3,3,
-ong, muh fasi mano,
+NEW,33,
+2,22,2,2,3,3,3,3,
+1,1,
+NEW2,44,
+-
+-

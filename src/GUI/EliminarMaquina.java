@@ -1,27 +1,30 @@
 package GUI;
 import clases.Fichero;
 import static clases.Fichero.buscar_planta;
+import clases.Maquina;
 import clases.Planta;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 
-public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
+public class EliminarMaquina extends javax.swing.JPanel {
     DefaultTableModel model = new DefaultTableModel();
     
-    public ConsultarPlantaparaEditar() {
+    public EliminarMaquina() {
         initComponents();
         imprimir_tabla();
     }
  
+
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "Selecionado"};
-           boolean [] editable= {false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
+           String [] columnas= new String[]{"Marca", "Modelo", "Numero", "Estado", "Selecionado"};
+           boolean [] editable= {false, false, false, false, true};
+           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class,java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
            public Class getColumnClass(int i){
                return types[i];
@@ -30,20 +33,29 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
                return editable[column];
            }
            };
-           //limpiar(Table, model);
+           limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Planta> lista_platas= Fichero.leerTodaslasPlantas();
-           for(int i=0; i<lista_platas.size(); i++){
-                Planta p= (Planta) lista_platas.get(i);
-                datos[0]= String.valueOf(p.getColor());
-                datos[1]= p.getSuperficie();
-                datos[2]=false;
+           ArrayList<Maquina> lista_maquinas= Fichero.leerTodaslasMaquinas();
+           for(int i=0; i<lista_maquinas.size(); i++){
+                Maquina m= (Maquina) lista_maquinas.get(i);
+                datos[0]= String.valueOf(m.getMarca());
+                datos[1]= String.valueOf(m.getModelo());
+                datos[2]= Integer.valueOf(m.getNumero());
+                datos[3]= String.valueOf(m.getEstado());
+                datos[4]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
        }
 
-    
+    public void limpiar(JTable tabla, DefaultTableModel modelo){
+        if(modelo.getRowCount()>0){
+            for(int i=0; i<tabla.getRowCount(); i++){
+            modelo.removeRow(i);
+            i-=1;
+            }
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -94,14 +106,14 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setText("Continuar");
+        jButton2.setText("Eliminar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Seleccione una planta que quiere editar y presione el boton de \"Continuar\"");
+        jLabel2.setText("Seleccione una maquina que quiera eliminar y presione el boton de \"Eliminar\"");
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -171,49 +183,53 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_Planta menu_planta= new Menu_Planta();
-        menu_planta.setSize(736,449);
-        menu_planta.setLocation(0,0);
+        Menu_Maquina menu_maquina= new Menu_Maquina();
+        menu_maquina.setSize(736,449);
+        menu_maquina.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_planta, BorderLayout.CENTER);
+        Background.add(menu_maquina, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Planta p= new Planta();
+
+        ArrayList<Maquina> lista= new ArrayList();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 2)){
-                seleccion++;
-                p.setColor((String) Table.getValueAt(i, 0));
-                p.setSuperficie((int) Table.getValueAt(i, 1));
+            seleccion++;
+            if((Boolean) Table.getValueAt(i, 4)){
+                Maquina m= new Maquina(
+                        (String) Table.getValueAt(i, 0), 
+                        (String) Table.getValueAt(i, 1),
+                        (int) Table.getValueAt(i, 2),
+                        (String) Table.getValueAt(i, 3)
+                );        
+                lista.add(m);
             }
         }
         if(seleccion!=0){
-            EditarPlanta editarplanta= new EditarPlanta(buscar_planta(p));
-            editarplanta.setSize(736,449);
-            editarplanta.setLocation(0,0);
-            Background.setLayout(new BorderLayout());
-            Background.removeAll();
-            Background.add(editarplanta, BorderLayout.CENTER);
-            Background.revalidate();
-            Background.repaint();
+            for(int i=0; i<lista.size(); i++){
+                Fichero.eliminarMaquina(lista.get(i));
+                imprimir_tabla();
+            }
+            JOptionPane.showMessageDialog(null, "Se elimino correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            lista.clear();
         }
         else
-            JOptionPane.showMessageDialog(null, "Seleccione una planta", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Seleccione una maquina", "Ok", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
-        int selectedRow = Table.getSelectedRow();
+        /*int selectedRow = Table.getSelectedRow();
             if ((Boolean)Table.getValueAt(selectedRow , 2)) {
                for (int i = 0; i < Table.getRowCount(); i++) {
                if ( i != selectedRow) {
                   Table.setValueAt(false, i, 2);
                }
              }
-        }
+        }*/
     }//GEN-LAST:event_TableMouseClicked
 
 

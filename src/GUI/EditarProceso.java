@@ -6,12 +6,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class CrearProceso extends javax.swing.JPanel {
-    public CrearProceso() {
+public class EditarProceso extends javax.swing.JPanel {
+    public EditarProceso(Proceso proceso) {
         initComponents();
         imprimir_tabla();
+        p_vieja=proceso;
+        Nombre.setText(proceso.getNombre());
+        Complejidad.setText(proceso.getComplejidad());
     }
 
+    Proceso p_vieja =new Proceso();
+    
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
            String [] columnas= new String[]{"Color", "Superficie", "Selecionado"};
@@ -191,31 +196,23 @@ public class CrearProceso extends javax.swing.JPanel {
     }//GEN-LAST:event_NombreActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+
         ArrayList<Planta> lista= new ArrayList<>();
         if(Nombre.getText().isEmpty() || Complejidad.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         else{
-
         for(int i=0; i<Table.getRowCount(); i++){
             if((Boolean) Table.getValueAt(i, 2)){
-                Planta p= new Planta(
-                (String) Table.getValueAt(i, 0),
-                (int) Table.getValueAt(i, 1));
+                Planta p= new Planta((String) Table.getValueAt(i, 0),  (int) Table.getValueAt(i, 1) );
                 lista.add(p);
             }
         }
-        Proceso pr= new Proceso(Nombre.getText(), Complejidad.getText());
-        pr.setPlanta(lista);
-        Fichero.guardar_proceso(pr);
-        JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        Proceso p_nueva= new Proceso(Nombre.getText(), Complejidad.getText());
+        p_nueva.setPlanta(lista);
         
-        Nombre.setText("");
-        Complejidad.setText("");
-        for (int i = 0; i < Table.getRowCount(); i++) {
-                  Table.setValueAt(false, i, 2);
-        }
+        Fichero.modificarProceso(p_nueva, p_vieja);
+        JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         lista.clear();
     }//GEN-LAST:event_jButton2ActionPerformed
