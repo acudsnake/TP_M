@@ -1,6 +1,5 @@
 package GUI;
 import clases.Fichero;
-import static clases.Fichero.buscar_planta;
 import clases.Planta;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -19,9 +18,13 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
  
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "Selecionado"};
-           boolean [] editable= {false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
+           String [] columnas= new String[]{"Color", "Superficie", "ID","Selecionado"};
+           boolean [] editable= {false, false, false, true};
+           Class[] types =new Class[]{
+               java.lang.Object.class,
+               java.lang.Object.class, 
+               java.lang.Object.class, 
+               java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
            public Class getColumnClass(int i){
                return types[i];
@@ -37,7 +40,8 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
                 Planta p= (Planta) lista_platas.get(i);
                 datos[0]= String.valueOf(p.getColor());
                 datos[1]= p.getSuperficie();
-                datos[2]=false;
+                datos[2]=p.getId();
+                datos[3]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
@@ -185,14 +189,15 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
         Planta p= new Planta();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 2)){
+            if((Boolean) Table.getValueAt(i, 3)){
                 seleccion++;
                 p.setColor((String) Table.getValueAt(i, 0));
                 p.setSuperficie((int) Table.getValueAt(i, 1));
+                p.setId((int) Table.getValueAt(i, 2));
             }
         }
         if(seleccion!=0){
-            EditarPlanta editarplanta= new EditarPlanta(buscar_planta(p));
+            EditarPlanta editarplanta= new EditarPlanta(p);
             editarplanta.setSize(736,449);
             editarplanta.setLocation(0,0);
             Background.setLayout(new BorderLayout());
@@ -207,10 +212,10 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
         int selectedRow = Table.getSelectedRow();
-            if ((Boolean)Table.getValueAt(selectedRow , 2)) {
+            if ((Boolean)Table.getValueAt(selectedRow , 3)) {
                for (int i = 0; i < Table.getRowCount(); i++) {
                if ( i != selectedRow) {
-                  Table.setValueAt(false, i, 2);
+                  Table.setValueAt(false, i, 3);
                }
              }
         }

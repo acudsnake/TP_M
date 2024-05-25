@@ -13,15 +13,17 @@ public class ConsultarProceso extends javax.swing.JPanel {
         initComponents();
         model.addColumn("Nombre");
         model.addColumn("Complejidad");
+        model.addColumn("ID");
         imprimir_tabla();
     }
 
-    public void imprimir_tabla(){
+   public void imprimir_tabla(){
         model.setRowCount(0);
-        ArrayList<Proceso> lista_proceso= Fichero.leerTodaslosProcesos();
+        ArrayList<Proceso> lista_proceso= Fichero.leerProcesos();
+        
         int i=0;
         while (i < lista_proceso.size()) {
-             model.addRow(new String[]{lista_proceso.get(i).getNombre(), lista_proceso.get(i).getComplejidad()});
+             model.addRow(new String[]{lista_proceso.get(i).getNombre(), lista_proceso.get(i).getComplejidad(), String.valueOf(lista_proceso.get(i).getID()) });
              i++;
         }
         Table.setModel(model);

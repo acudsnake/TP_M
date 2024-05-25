@@ -19,9 +19,9 @@ public class EditarProceso extends javax.swing.JPanel {
     
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "Selecionado"};
-           boolean [] editable= {false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
+           String [] columnas= new String[]{"Color", "Superficie", "ID", "Selecionado"};
+           boolean [] editable= {false, false, false, true};
+           Class[] types =new Class[]{java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
            public Class getColumnClass(int i){
                return types[i];
@@ -30,21 +30,22 @@ public class EditarProceso extends javax.swing.JPanel {
                return editable[column];
            }
            };
-           //limpiar(Table, model);
+           limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
            ArrayList<Planta> lista_platas= Fichero.leerTodaslasPlantas();
            for(int i=0; i<lista_platas.size(); i++){
                 Planta p= (Planta) lista_platas.get(i);
                 datos[0]= String.valueOf(p.getColor());
                 datos[1]= p.getSuperficie();
-                datos[2]=false;
+                datos[2]=p.getId();
+                datos[3]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
        }
      
     
-    /*public void limpiar(JTable tabla, DefaultTableModel modelo){
+    public void limpiar(JTable tabla, DefaultTableModel modelo){
         if(modelo.getRowCount()>0){
             for(int i=0; i<tabla.getRowCount(); i++){
             modelo.removeRow(i);
@@ -52,7 +53,7 @@ public class EditarProceso extends javax.swing.JPanel {
             }
         }
     }
-    */
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -203,15 +204,21 @@ public class EditarProceso extends javax.swing.JPanel {
         }
         else{
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 2)){
+            if((Boolean) Table.getValueAt(i, 3)){
                 Planta p= new Planta((String) Table.getValueAt(i, 0),  (int) Table.getValueAt(i, 1) );
+                p.setId((int) Table.getValueAt(i, 2));
                 lista.add(p);
             }
         }
         Proceso p_nueva= new Proceso(Nombre.getText(), Complejidad.getText());
-        p_nueva.setPlanta(lista);
+        p_nueva.setID(p_vieja.getID());
+        Fichero.modificarProceso(p_vieja, p_nueva);
         
-        Fichero.modificarProceso(p_nueva, p_vieja);
+        //ahora modificamos PlantasProcesos
+        Fichero.eliminarPlantas_Procesos(p_vieja);
+        Fichero.guardarPlantasProcesos(lista, p_vieja);
+        
+        
         JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         lista.clear();

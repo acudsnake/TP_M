@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 
 public class Maquina {
+    private int ID;
     private String marca;
     private String modelo;
     private int numero;
     private String estado;
-    private Planta planta; //1..* //verificar con el diagrama de dominio
+    //private Planta planta; //1
+    private int planta; //1
     private Opera opera;
 
     public Maquina( ) {
@@ -62,12 +64,29 @@ public class Maquina {
         this.opera = opera;
     }
 
-    public Planta getPlanta() {
+   /*public Planta getPlanta() {
         return planta;
     }
 
     public void setPlanta(Planta planta) {
         this.planta = planta;
+    }
+*/
+
+    public int getPlanta() {
+        return planta;
+    }
+
+    public void setPlanta(int planta) {
+        this.planta = planta;
+    }
+    
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
 

@@ -1,9 +1,11 @@
 package GUI;
+import clases.Fichero;
 import java.awt.BorderLayout;
 
 public class Pantalla extends javax.swing.JFrame {
     Menu menu= new Menu();
     public Pantalla() {
+        Fichero.crear_TODOS_TXT();
         initComponents();
         menu.setSize(736,449);
         menu.setLocation(0,0);

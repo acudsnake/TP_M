@@ -14,9 +14,9 @@ public class CrearProceso extends javax.swing.JPanel {
 
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "Selecionado"};
-           boolean [] editable= {false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
+           String [] columnas= new String[]{"Color", "Superficie", "ID","Selecionado"};
+           boolean [] editable= {false, false, false, true};
+           Class[] types =new Class[]{java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
            public Class getColumnClass(int i){
                return types[i];
@@ -32,7 +32,8 @@ public class CrearProceso extends javax.swing.JPanel {
                 Planta p= (Planta) lista_platas.get(i);
                 datos[0]= String.valueOf(p.getColor());
                 datos[1]= p.getSuperficie();
-                datos[2]=false;
+                datos[2]= p.getId();
+                datos[3]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
@@ -197,24 +198,24 @@ public class CrearProceso extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         else{
-
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 2)){
+            if((Boolean) Table.getValueAt(i, 3)){
                 Planta p= new Planta(
                 (String) Table.getValueAt(i, 0),
                 (int) Table.getValueAt(i, 1));
+                p.setId((int) Table.getValueAt(i, 2));
                 lista.add(p);
             }
         }
         Proceso pr= new Proceso(Nombre.getText(), Complejidad.getText());
-        pr.setPlanta(lista);
-        Fichero.guardar_proceso(pr);
+        Fichero.guardarProceso(pr);
+        Fichero.guardarPlantasProcesos(lista, pr);
         JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         
         Nombre.setText("");
         Complejidad.setText("");
         for (int i = 0; i < Table.getRowCount(); i++) {
-                  Table.setValueAt(false, i, 2);
+                  Table.setValueAt(false, i, 3);
         }
         }
         lista.clear();

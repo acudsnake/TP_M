@@ -1,7 +1,6 @@
 package GUI;
 import clases.Fichero;
-import static clases.Fichero.buscar_planta;
-import clases.Planta;
+import clases.*;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -21,9 +20,13 @@ public class EliminarPlanta extends javax.swing.JPanel {
 
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "Selecionado"};
-           boolean [] editable= {false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
+           String [] columnas= new String[]{"Color", "Superficie", "ID","Selecionado"};
+           boolean [] editable= {false, false, false, true};
+           Class[] types =new Class[]{
+               java.lang.Object.class, 
+               java.lang.Object.class, 
+               java.lang.Object.class, 
+               java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
            public Class getColumnClass(int i){
                return types[i];
@@ -39,7 +42,8 @@ public class EliminarPlanta extends javax.swing.JPanel {
                 Planta p= (Planta) lista_platas.get(i);
                 datos[0]= String.valueOf(p.getColor());
                 datos[1]= p.getSuperficie();
-                datos[2]=false;
+                datos[2]= p.getId();
+                datos[3]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
@@ -191,20 +195,36 @@ public class EliminarPlanta extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //todavia laburar la eliminacion multiple
-        
         ArrayList<Planta> lista= new ArrayList();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 2)){
+            if((Boolean) Table.getValueAt(i, 3)){
                 seleccion++;
                 Planta p= new Planta((String) Table.getValueAt(i, 0), (int) Table.getValueAt(i, 1));
+                p.setId((int) Table.getValueAt(i, 2));
                 lista.add(p);
             }
         }
-        if(seleccion!=0){
+        if(seleccion>0){
             for(int i=0; i<lista.size(); i++){
                 Fichero.eliminarPlanta(lista.get(i));
+                
+                //Eliminar maquinas que tenia asignadas
+                ArrayList<Maquina> maquinas= Fichero.leerMaquinas();
+                for(int i2=0; i2<maquinas.size(); i2++){
+                    if(maquinas.get(i2).getPlanta()==lista.get(i).getId())
+                        Fichero.eliminarMaquina(maquinas.get(i2));
+                }
+                
+                //eliminar o desasignar procesos que tenia asignado
+                Fichero.eliminarPlantas_Procesos(lista.get(i));
+                ArrayList<Proceso> procesos= new ArrayList();
+                procesos= Fichero.leerProcesos();
+                for(int i2=0; i2<procesos.size(); i2++){
+                    if(!Fichero.verificar_si_proceso_esta_asignado(procesos.get(i2))){
+                        Fichero.eliminarProceso(procesos.get(i2));
+                    }    
+                }
                 imprimir_tabla();
             }
             JOptionPane.showMessageDialog(null, "Se elimino correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);

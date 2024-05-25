@@ -3,6 +3,7 @@ package clases;
 import java.util.ArrayList;
 
 public class Planta {
+    private int id;
     private String color;
     private int superficie;
     private ArrayList<Maquina> maquina; //0..*
@@ -11,11 +12,14 @@ public class Planta {
     public Planta() {
 
     }
-    
-    public Planta(String color, int superficie) {
+
+    public Planta( String color, int superficie) {
         this.color = color;
         this.superficie = superficie;
     }
+    
+    
+  
 
     public String getColor() {
         return color;
@@ -47,6 +51,14 @@ public class Planta {
 
     public void setProceso(ArrayList<Proceso> proceso) {
         this.proceso = proceso;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

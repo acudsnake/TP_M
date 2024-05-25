@@ -13,6 +13,7 @@ public class ConsultarPlanta extends javax.swing.JPanel {
         initComponents();
         model.addColumn("Color");
         model.addColumn("Superficie");
+        model.addColumn("ID");
         imprimir_tabla();
     }
 
@@ -21,7 +22,8 @@ public class ConsultarPlanta extends javax.swing.JPanel {
         ArrayList<Planta> lista_platas= Fichero.leerTodaslasPlantas();
         int i=0;
         while (i < lista_platas.size()) {
-             model.addRow(new String[]{lista_platas.get(i).getColor(), String.valueOf(lista_platas.get(i).getSuperficie())});
+             model.addRow(new String[]{lista_platas.get(i).getColor(), String.valueOf(lista_platas.get(i).getSuperficie()), 
+             String.valueOf(lista_platas.get(i).getId())});
              i++;
         }
         Table.setModel(model);
