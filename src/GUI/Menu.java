@@ -120,14 +120,14 @@ public class Menu extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        /*Menu_Maquina menu_maquina= new Menu_Maquina();
+        Menu_Maquina menu_maquina = new Menu_Maquina();
         menu_maquina.setSize(736,449);
         menu_maquina.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
         Background.add(menu_maquina, BorderLayout.CENTER);
         Background.revalidate();
-        Background.repaint();*/
+        Background.repaint();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
