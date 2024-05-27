@@ -22,6 +22,9 @@ public class Fichero {
     public static final String pathTecnicos = pathCurrent + File.separator + "src/data/Tecnicos.txt";
     public static final String pathPlantasProcesos = pathCurrent + File.separator + "src/data/PlantasProcesos.txt";
     public static final String pathPlantasMaquinas = pathCurrent + File.separator + "src/data/PlantasMaquinas.txt";
+    public static final String pathMaquinasTecnicos = pathCurrent + File.separator + "src/data/MaquinasTecnicos.txt";
+    
+     //-------------------------------------FICHEROS-----------------------------------------//
     
     public static void crear_TODOS_TXT() {
         File file0 = new File(pathMaquinas);
@@ -31,6 +34,7 @@ public class Fichero {
         File file4 = new File(pathTecnicos);
         File file5 = new File(pathPlantasProcesos);
         File file6 = new File(pathPlantasMaquinas);
+        File file7 = new File(pathMaquinasTecnicos);
         try {
             file0.createNewFile();
             file1.createNewFile();
@@ -51,6 +55,7 @@ public class Fichero {
         new File(pathTecnicos).delete();
         new File(pathPlantasProcesos).delete();
         new File(pathPlantasMaquinas).delete();
+        new File(pathMaquinasTecnicos).delete();
     }
     
     public static int obtenerSiguenteCodigo(String filePath) {
@@ -84,7 +89,7 @@ public class Fichero {
             }
         }
    
-    public static ArrayList<Planta> leerTodaslasPlantas(){
+    public static ArrayList<Planta> leerPlantas(){
         ArrayList<Planta> lista_plantas = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(pathPlantas))) {
             String linea;
@@ -92,6 +97,18 @@ public class Fichero {
                 String[] datos = linea.split(DATA_SEPARATOR);
                 Planta planta= new Planta(datos[1],Integer.parseInt(datos[2]));
                 planta.setId(Integer.parseInt(datos[0]));
+                
+                //Busca las maquinas que tiene asignada esa planta
+                ArrayList<Maquina> lista_maquinas= new ArrayList();
+                lista_maquinas=Fichero.retornarMaquinasdePlanta(planta);
+                planta.setMaquina(lista_maquinas);
+                
+                //Busca los procesos que tiene asignada esa planta
+                ArrayList<Proceso> lista_procesos= new ArrayList();
+                lista_procesos=Fichero.retornarProcesosdePlanta(planta);
+                planta.setProceso(lista_procesos);
+                
+                
                 lista_plantas.add(planta);
             }
         } 
@@ -100,7 +117,7 @@ public class Fichero {
         }
         return lista_plantas;
     }
-
+    
     public static void eliminarPlanta(Planta p){
         String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(pathPlantas));
@@ -153,7 +170,24 @@ public class Fichero {
         temporalFile.renameTo(originalFile);     
     }
   
-//--------------------------------------MAQUINAS--------------------------------------------//
+    public static Planta buscarPlanta(int ID){
+        try (BufferedReader br = new BufferedReader(new FileReader(pathPlantas))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if(Integer.parseInt(datos[0])==ID){
+                    Planta p= new Planta(datos[1],Integer.parseInt(datos[2]));
+                    return p;
+             }
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    //--------------------------------------MAQUINAS--------------------------------------------//
 
     public static ArrayList<Maquina> leerMaquinas(){
         ArrayList<Maquina> lista_maquinas = new ArrayList<>();
@@ -187,15 +221,6 @@ public class Fichero {
         }
     }
     
-    public static void guardarPlantaMaquina(Planta planta, Maquina maquina){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathPlantasMaquinas, true))) {
-            writer.write(planta.getId() + DATA_SEPARATOR + maquina.getID() + "\n");
-        }
-        catch (IOException e) {
-            System.out.println("Error" + e.getMessage());
-        }
-    }
-    
     public static void eliminarMaquina(Maquina m){
         String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(pathMaquinas));
@@ -219,8 +244,56 @@ public class Fichero {
         
     }
 
-
-//-----------------------------------PLANTAS_PROCESOS--------------------------------------------//
+    public static Maquina buscarMaquina(int ID){
+        try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if(Integer.parseInt(datos[0])==ID){
+                    Maquina m= new Maquina(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4]);
+                    m.setID(Integer.parseInt(datos[0]));
+                    //m.setPlantaId(Integer.parseInt(datos[5]));
+                    return m;
+             }
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    //-----------------------------------PLANTAS_MAQUINAS--------------------------------------------//
+    
+    public static void guardarPlantaMaquina(Planta planta, Maquina maquina){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathPlantasMaquinas, true))) {
+            writer.write(planta.getId() + DATA_SEPARATOR + maquina.getID() + "\n");
+        }
+        catch (IOException e) {
+            System.out.println("Error" + e.getMessage());
+        }
+    }
+    
+    public static ArrayList<Maquina> retornarMaquinasdePlanta(Planta planta){
+        ArrayList<Maquina> lista_maquinas= new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathPlantasMaquinas))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if(Integer.parseInt(datos[0])==planta.getId()){
+                    Maquina maquina= new Maquina();
+                    maquina=Fichero.buscarMaquina(Integer.parseInt(datos[1]));
+                    lista_maquinas.add(maquina);
+                }
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lista_maquinas;
+    }
+    
+    //-----------------------------------PLANTAS_PROCESOS--------------------------------------------//
 
     public static void guardarPlantasProcesos(ArrayList<Planta> plantas, Proceso proceso){
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathPlantasProcesos, true))) {
@@ -296,8 +369,45 @@ public class Fichero {
             return false;
         }
     
+    public static ArrayList<Proceso> retornarProcesosdePlanta(Planta planta){
+        ArrayList<Proceso> lista_procesos= new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathPlantasProcesos))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if(Integer.parseInt(datos[0])==planta.getId()){
+                    Proceso proceso= new Proceso();
+                    proceso=Fichero.buscarProceso(Integer.parseInt(datos[1]));
+                    lista_procesos.add(proceso);
+                }
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lista_procesos;
+    }
     
-//--------------------------------------PROCESOS--------------------------------------------//
+    public static ArrayList<Planta> retornarPlantasdeProceso(Proceso proceso){
+        ArrayList<Planta> lista_plantas= new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathPlantasProcesos))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if(Integer.parseInt(datos[1])==proceso.getID()){
+                    Planta planta = new Planta();
+                    planta=Fichero.buscarPlanta(Integer.parseInt(datos[0]));
+                    lista_plantas.add(planta);
+                }
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lista_plantas;
+    }
+    
+    //--------------------------------------PROCESOS--------------------------------------------//
 
     public static void guardarProceso(Proceso proceso){
             int id=Fichero.obtenerSiguenteCodigo(pathProcesos);
@@ -318,6 +428,12 @@ public class Fichero {
                     String[] datos = linea.split(DATA_SEPARATOR);
                     Proceso proceso= new Proceso(datos[1], datos[2]);
                     proceso.setID(Integer.parseInt(datos[0]));
+                    
+                    //Buscar las Plantas que tienen asignadas este proceso
+                    ArrayList<Planta> lista_plantas= new ArrayList<>();
+                    lista_plantas= Fichero.retornarPlantasdeProceso(proceso);
+                    proceso.setPlanta(lista_plantas);
+                    
                     lista_procesos.add(proceso);
                 }
             } catch (IOException e) {
@@ -378,6 +494,25 @@ public class Fichero {
         temporalFile.renameTo(originalFile);     
     } 
 
+    public static Proceso buscarProceso(int ID){
+        try (BufferedReader br = new BufferedReader(new FileReader(pathProcesos))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if(Integer.parseInt(datos[0])==ID){
+                    Proceso proceso= new Proceso(datos[1], datos[2]);
+                    proceso.setID(Integer.parseInt(datos[0]));
+                    return proceso;
+             }
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    
 }
      
     

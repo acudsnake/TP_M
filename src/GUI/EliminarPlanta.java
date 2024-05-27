@@ -37,7 +37,7 @@ public class EliminarPlanta extends javax.swing.JPanel {
            };
            limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Planta> lista_platas= Fichero.leerTodaslasPlantas();
+           ArrayList<Planta> lista_platas= Fichero.leerPlantas();
            for(int i=0; i<lista_platas.size(); i++){
                 Planta p= (Planta) lista_platas.get(i);
                 datos[0]= String.valueOf(p.getColor());
@@ -236,10 +236,10 @@ public class EliminarPlanta extends javax.swing.JPanel {
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
         /*int selectedRow = Table.getSelectedRow();
-            if ((Boolean)Table.getValueAt(selectedRow , 2)) {
+            if ((Boolean)Table.getValueAt(selectedRow , 3)) {
                for (int i = 0; i < Table.getRowCount(); i++) {
                if ( i != selectedRow) {
-                  Table.setValueAt(false, i, 2);
+                  Table.setValueAt(false, i, 3);
                }
              }
         }*/

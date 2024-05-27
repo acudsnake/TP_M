@@ -1,5 +1,4 @@
 package clases;
-
 import java.util.ArrayList;
 
 
@@ -23,7 +22,6 @@ public class Maquina {
         this.estado = estado;
     }
     
-
     public String getMarca() {
         return marca;
     }

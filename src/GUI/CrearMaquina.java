@@ -15,7 +15,7 @@ public class CrearMaquina extends javax.swing.JPanel {
 
     private void cargarTablaPlantas() {
         DefaultTableModel model = (DefaultTableModel) tablaPlantas.getModel();
-        ArrayList<Planta> plantas = Fichero.leerTodaslasPlantas();
+        ArrayList<Planta> plantas = Fichero.leerPlantas();
         for (Planta p : plantas) {
             model.addRow(new Object[] {
                 p.getId(),
@@ -153,6 +153,11 @@ public class CrearMaquina extends javax.swing.JPanel {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tablaPlantas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaPlantasMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tablaPlantas);
@@ -321,6 +326,17 @@ public class CrearMaquina extends javax.swing.JPanel {
     private void fieldEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldEstadoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fieldEstadoActionPerformed
+
+    private void tablaPlantasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPlantasMouseClicked
+        /*int selectedRow = Table.getSelectedRow();
+            if ((Boolean)Table.getValueAt(selectedRow , 3)) {
+               for (int i = 0; i < Table.getRowCount(); i++) {
+               if ( i != selectedRow) {
+                  Table.setValueAt(false, i, 3);
+               }
+             }
+        }*/
+    }//GEN-LAST:event_tablaPlantasMouseClicked
 
     
 

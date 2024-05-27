@@ -32,7 +32,7 @@ public class EditarProceso extends javax.swing.JPanel {
            };
            limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Planta> lista_platas= Fichero.leerTodaslasPlantas();
+           ArrayList<Planta> lista_platas= Fichero.leerPlantas();
            for(int i=0; i<lista_platas.size(); i++){
                 Planta p= (Planta) lista_platas.get(i);
                 datos[0]= String.valueOf(p.getColor());
