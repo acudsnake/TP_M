@@ -9,8 +9,8 @@ public class Maquina {
     private String modelo;
     private int numero;
     private String estado;
-    //private Planta planta; //1
-    private int planta; //1
+    private Planta planta; //1
+    private int plantaId; //1
     private Opera opera;
 
     public Maquina( ) {
@@ -64,21 +64,20 @@ public class Maquina {
         this.opera = opera;
     }
 
-   /*public Planta getPlanta() {
+    public Planta getPlanta() {
         return planta;
     }
 
     public void setPlanta(Planta planta) {
         this.planta = planta;
     }
-*/
-
-    public int getPlanta() {
-        return planta;
+    
+   public int getPlantaId() {
+        return plantaId;
     }
 
-    public void setPlanta(int planta) {
-        this.planta = planta;
+    public void setPlantaId(int plantaId) {
+        this.plantaId = plantaId;
     }
     
     public int getID() {

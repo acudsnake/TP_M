@@ -3,6 +3,7 @@ import clases.*;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -140,7 +141,7 @@ public class CrearMaquina extends javax.swing.JPanel {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, true
@@ -230,10 +231,10 @@ public class CrearMaquina extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(botonGuardar)
-                .addContainerGap())
+                .addGap(54, 54, 54))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -249,46 +250,60 @@ public class CrearMaquina extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
-        Menu_Proceso menu_proceso= new Menu_Proceso();
-        menu_proceso.setSize(736,449);
-        menu_proceso.setLocation(0,0);
+        JPanel menu = new Menu_Maquina();
+        menu.setSize(736,449);
+        menu.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_proceso, BorderLayout.CENTER);
+        Background.add(menu, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
-        
-        ArrayList<Planta> lista = new ArrayList<>();
         if (fieldEstado.getText().isEmpty() || fieldMarca.getText().isEmpty() || fieldNumero.getText().isEmpty() || fieldModelo.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         
+        // Buscar planta seleccionado en la tabla para asignar a esta nueva maquina
+        Planta p = new Planta();
+        boolean found = false;
         for (int i = 0; i < tablaPlantas.getRowCount(); i++) {
+            // Si esta planta ha sido seleccionada...
             if ((Boolean) tablaPlantas.getValueAt(i, 3)) {
-                Planta p = new Planta(
-                (String) tablaPlantas.getValueAt(i, 0),
-                (int) tablaPlantas.getValueAt(i, 1));
-                p.setId((int) tablaPlantas.getValueAt(i, 2));
-                lista.add(p);
+                p.setId((int) tablaPlantas.getValueAt(i, 0));
+                p.setColor((String) tablaPlantas.getValueAt(i, 1));
+                p.setSuperficie((int) tablaPlantas.getValueAt(i, 2));
+                found = true;
+                break;
             }
         }
+        
+        if (!found) {
+            JOptionPane.showMessageDialog(null, "Seleccione una planta a la cual asignar la maquina", "Ok", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         Maquina m = new Maquina(fieldMarca.getText(), fieldModelo.getText(), Integer.parseInt(fieldNumero.getText()), fieldEstado.getText());
-        //Fichero.guardarMaquina(m);
-        //Fichero.guardarPlantasProcesos(lista, m);
+        
+        // Generar nuevo id para esta maquina y guardarla junto con su asociacion
+        int id = Fichero.obtenerSiguenteCodigo(Fichero.pathMaquinas);
+        m.setID(id);
+        Fichero.guardarMaquina(m);
+        Fichero.guardarPlantaMaquina(p, m);
+        
         JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         
         // Limpiar campos para poder añadir otro proceso.
-        fieldMarca.setText("");
-        fieldModelo.setText("");
-        fieldNumero.setText("");
-        fieldEstado.setText("");
+        //fieldMarca.setText("");
+        //fieldModelo.setText("");
+        //fieldNumero.setText("");
+        //fieldEstado.setText("");
         
-        for (int i = 0; i < tablaPlantas.getRowCount(); i++) {
-                  tablaPlantas.setValueAt(false, i, 3);
-        }
+        //for (int i = 0; i < tablaPlantas.getRowCount(); i++) {
+        //    tablaPlantas.setValueAt(false, i, 3);
+        //}
     }//GEN-LAST:event_botonGuardarActionPerformed
 
     private void fieldMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldMarcaActionPerformed

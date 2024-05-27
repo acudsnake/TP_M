@@ -212,7 +212,7 @@ public class EliminarPlanta extends javax.swing.JPanel {
                 //Eliminar maquinas que tenia asignadas
                 ArrayList<Maquina> maquinas= Fichero.leerMaquinas();
                 for(int i2=0; i2<maquinas.size(); i2++){
-                    if(maquinas.get(i2).getPlanta()==lista.get(i).getId())
+                    if(maquinas.get(i2).getPlantaId()==lista.get(i).getId())
                         Fichero.eliminarMaquina(maquinas.get(i2));
                 }
                 

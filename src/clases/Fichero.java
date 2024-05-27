@@ -21,6 +21,7 @@ public class Fichero {
     public static final String pathProcesos = pathCurrent + File.separator + "src/data/Procesos.txt";    
     public static final String pathTecnicos = pathCurrent + File.separator + "src/data/Tecnicos.txt";
     public static final String pathPlantasProcesos = pathCurrent + File.separator + "src/data/PlantasProcesos.txt";
+    public static final String pathPlantasMaquinas = pathCurrent + File.separator + "src/data/PlantasMaquinas.txt";
     
     public static void crear_TODOS_TXT() {
         File file0 = new File(pathMaquinas);
@@ -29,6 +30,7 @@ public class Fichero {
         File file3 = new File(pathProcesos);
         File file4 = new File(pathTecnicos);
         File file5 = new File(pathPlantasProcesos);
+        File file6 = new File(pathPlantasMaquinas);
         try {
             file0.createNewFile();
             file1.createNewFile();
@@ -46,7 +48,9 @@ public class Fichero {
         new File(pathOperas).delete();   
         new File(pathPlantas).delete();   
         new File(pathProcesos).delete();   
-        new File(pathTecnicos).delete();   
+        new File(pathTecnicos).delete();
+        new File(pathPlantasProcesos).delete();
+        new File(pathPlantasMaquinas).delete();
     }
     
     public static int obtenerSiguenteCodigo(String filePath) {
@@ -159,13 +163,37 @@ public class Fichero {
                 String[] datos = linea.split(DATA_SEPARATOR);
                 Maquina maquina= new Maquina(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4]);
                 maquina.setID(Integer.parseInt(datos[0]));
-                maquina.setPlanta(Integer.parseInt(datos[5]));
+                maquina.setPlantaId(Integer.parseInt(datos[5]));
                 lista_maquinas.add(maquina);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return lista_maquinas;
+    }
+    
+    public static void guardarMaquina(Maquina maquina){
+        int id = Fichero.obtenerSiguenteCodigo(pathMaquinas);
+        maquina.setID(id);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathMaquinas, true))) {
+                writer.write(maquina.getID() + DATA_SEPARATOR
+                           + maquina.getMarca() + DATA_SEPARATOR
+                           + maquina.getModelo() + DATA_SEPARATOR 
+                           + maquina.getNumero() + DATA_SEPARATOR
+                           + maquina.getEstado() + "\n");
+        }
+        catch (IOException e) {
+            System.out.println("Error" + e.getMessage());
+        }
+    }
+    
+    public static void guardarPlantaMaquina(Planta planta, Maquina maquina){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathPlantasMaquinas, true))) {
+            writer.write(planta.getId() + DATA_SEPARATOR + maquina.getID() + "\n");
+        }
+        catch (IOException e) {
+            System.out.println("Error" + e.getMessage());
+        }
     }
     
     public static void eliminarMaquina(Maquina m){
