@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,7 +25,7 @@ public class Fichero {
     public static final String pathPlantasMaquinas = pathCurrent + File.separator + "src/data/PlantasMaquinas.txt";
     public static final String pathMaquinasTecnicos = pathCurrent + File.separator + "src/data/MaquinasTecnicos.txt";
     
-     //-------------------------------------FICHEROS-----------------------------------------//
+    //-------------------------------------FICHEROS-----------------------------------------//
     
     public static void crear_TODOS_TXT() {
         File file0 = new File(pathMaquinas);
@@ -110,6 +111,8 @@ public class Fichero {
                 
                 
                 lista_plantas.add(planta);
+                
+                
             }
         } 
         catch (IOException e) {
@@ -197,7 +200,7 @@ public class Fichero {
                 String[] datos = linea.split(DATA_SEPARATOR);
                 Maquina maquina= new Maquina(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4]);
                 maquina.setID(Integer.parseInt(datos[0]));
-                maquina.setPlantaId(Integer.parseInt(datos[5]));
+                //maquina.setPlantaId(Integer.parseInt(datos[5]));
                 lista_maquinas.add(maquina);
             }
         } catch (IOException e) {
@@ -262,6 +265,154 @@ public class Fichero {
         }
         return null;
     }
+    
+    //--------------------------------------PROCESOS--------------------------------------------//
+
+    public static void guardarProceso(Proceso proceso){
+            int id=Fichero.obtenerSiguenteCodigo(pathProcesos);
+            proceso.setID(id);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathProcesos, true))) {
+                    writer.write(proceso.getID()+ DATA_SEPARATOR + proceso.getNombre() + DATA_SEPARATOR + proceso.getComplejidad() + DATA_SEPARATOR + "\n");
+            }
+            catch (IOException e) {
+                System.out.println("Error" + e.getMessage());
+            }
+        }
+    
+    public static ArrayList<Proceso> leerProcesos(){
+            ArrayList<Proceso> lista_procesos = new ArrayList<>();
+            try (BufferedReader br = new BufferedReader(new FileReader(pathProcesos))) {
+                String linea;
+                while ((linea = br.readLine()) != null){
+                    String[] datos = linea.split(DATA_SEPARATOR);
+                    Proceso proceso= new Proceso(datos[1], datos[2]);
+                    proceso.setID(Integer.parseInt(datos[0]));
+                    
+                    //Buscar las Plantas que tienen asignadas este proceso
+                    ArrayList<Planta> lista_plantas= new ArrayList<>();
+                    lista_plantas= Fichero.retornarPlantasdeProceso(proceso);
+                    proceso.setPlanta(lista_plantas);
+                    
+                    lista_procesos.add(proceso);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return lista_procesos;
+        }
+    
+    public static void eliminarProceso(Proceso p){
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathProcesos));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
+            String linea;
+            String[] datos;
+            while ((linea = reader.readLine()) != null) {
+                datos = linea.split(DATA_SEPARATOR);
+                if(!(Integer.parseInt(datos[0])==p.getID())){
+                        writer.write(linea);
+                        writer.newLine();
+                    }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File originalFile = new File(pathProcesos);
+        File temporalFile = new File(pathTemp);
+        originalFile.delete();
+        temporalFile.renameTo(originalFile);
+    }
+     
+    public static void modificarProceso(Proceso p_antigua, Proceso p_nueva){
+       String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathProcesos));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
+            String linea;
+            String[] datos;
+            String lineaNueva = p_antigua.getID()+ DATA_SEPARATOR + p_nueva.getNombre()+ DATA_SEPARATOR + p_nueva.getComplejidad();
+            
+            while ((linea = reader.readLine()) != null) {
+                datos = linea.split(DATA_SEPARATOR);
+                if(Integer.parseInt(datos[0])==p_antigua.getID()){
+                        writer.write(lineaNueva);
+                        writer.newLine();
+                    }
+                else{
+                    System.out.print("se edito");
+                    writer.write(linea);
+                    writer.newLine();
+                }
+                    
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File originalFile = new File(pathProcesos);
+        File temporalFile = new File(pathTemp);
+        originalFile.delete();
+        temporalFile.renameTo(originalFile);     
+    } 
+
+    public static Proceso buscarProceso(int ID){
+        try (BufferedReader br = new BufferedReader(new FileReader(pathProcesos))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if(Integer.parseInt(datos[0])==ID){
+                    Proceso proceso= new Proceso(datos[1], datos[2]);
+                    proceso.setID(Integer.parseInt(datos[0]));
+                    return proceso;
+             }
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    //-------------------------------------TECNICOS-----------------------------------------//
+    
+    public static ArrayList<Tecnico> leerTecnicos(){
+        ArrayList<Tecnico> lista_tecnicos = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathTecnicos))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                int dia = Integer.parseInt(datos[5]);
+                int mes = Integer.parseInt(datos[6]);
+                int año = Integer.parseInt(datos[7]);
+                LocalDate fecha = LocalDate.of(año, mes, dia);
+
+                Tecnico tecnico= new Tecnico(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4], fecha);
+                tecnico.setID(Integer.parseInt(datos[0]));
+                
+                //Consultar si tecnico debe tener un arraylist de maquinas
+                
+                lista_tecnicos.add(tecnico);
+                
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lista_tecnicos;
+    }
+    
+    //-------------------------------------OPERAS------------------------------------------//
+    
+    public static void guardarOpera(Opera opera){
+            int id=Fichero.obtenerSiguenteCodigo(pathOperas);
+            opera.setID(id);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathOperas, true))) {     
+                    writer.write(opera.getID() + DATA_SEPARATOR + opera.getTurno() + DATA_SEPARATOR +
+                            opera.getFechaInicio().getDayOfMonth() + DATA_SEPARATOR +  
+                            opera.getFechaInicio().getMonthValue() + DATA_SEPARATOR + 
+                            opera.getFechaInicio().getYear()+ DATA_SEPARATOR + "\n");
+            }
+            catch (IOException e) {
+                System.out.println("Error" + e.getMessage());
+            }
+        }
     
     //-----------------------------------PLANTAS_MAQUINAS--------------------------------------------//
     
@@ -407,113 +558,62 @@ public class Fichero {
         return lista_plantas;
     }
     
-    //--------------------------------------PROCESOS--------------------------------------------//
-
-    public static void guardarProceso(Proceso proceso){
-            int id=Fichero.obtenerSiguenteCodigo(pathProcesos);
-            proceso.setID(id);
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathProcesos, true))) {
-                    writer.write(proceso.getID()+ DATA_SEPARATOR + proceso.getNombre() + DATA_SEPARATOR + proceso.getComplejidad() + DATA_SEPARATOR + "\n");
+    //-----------------------------------MAQUINAS_TECNICOS--------------------------------------------//
+    
+    public static void guardarMaquinasTecnicos(int ID_t, int ID_m, int ID_o){
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathMaquinasTecnicos, true))) {
+                    writer.write(ID_t + DATA_SEPARATOR + ID_m + DATA_SEPARATOR + ID_o +"\n");
             }
             catch (IOException e) {
                 System.out.println("Error" + e.getMessage());
             }
         }
     
-    public static ArrayList<Proceso> leerProcesos(){
-            ArrayList<Proceso> lista_procesos = new ArrayList<>();
-            try (BufferedReader br = new BufferedReader(new FileReader(pathProcesos))) {
-                String linea;
-                while ((linea = br.readLine()) != null){
-                    String[] datos = linea.split(DATA_SEPARATOR);
-                    Proceso proceso= new Proceso(datos[1], datos[2]);
-                    proceso.setID(Integer.parseInt(datos[0]));
-                    
-                    //Buscar las Plantas que tienen asignadas este proceso
-                    ArrayList<Planta> lista_plantas= new ArrayList<>();
-                    lista_plantas= Fichero.retornarPlantasdeProceso(proceso);
-                    proceso.setPlanta(lista_plantas);
-                    
-                    lista_procesos.add(proceso);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return lista_procesos;
-        }
-    
-    public static void eliminarProceso(Proceso p){
-        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathProcesos));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
-            String linea;
-            String[] datos;
-            while ((linea = reader.readLine()) != null) {
-                datos = linea.split(DATA_SEPARATOR);
-                if(!(Integer.parseInt(datos[0])==p.getID())){
-                        writer.write(linea);
-                        writer.newLine();
-                    }
-            } 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File originalFile = new File(pathProcesos);
-        File temporalFile = new File(pathTemp);
-        originalFile.delete();
-        temporalFile.renameTo(originalFile);
-    }
-     
-    public static void modificarProceso(Proceso p_antigua, Proceso p_nueva){
-       String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathProcesos));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
-            String linea;
-            String[] datos;
-            String lineaNueva = p_antigua.getID()+ DATA_SEPARATOR + p_nueva.getNombre()+ DATA_SEPARATOR + p_nueva.getComplejidad();
-            
-            while ((linea = reader.readLine()) != null) {
-                datos = linea.split(DATA_SEPARATOR);
-                if(Integer.parseInt(datos[0])==p_antigua.getID()){
-                        writer.write(lineaNueva);
-                        writer.newLine();
-                    }
-                else{
-                    System.out.print("se edito");
-                    writer.write(linea);
-                    writer.newLine();
-                }
-                    
-            } 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File originalFile = new File(pathProcesos);
-        File temporalFile = new File(pathTemp);
-        originalFile.delete();
-        temporalFile.renameTo(originalFile);     
-    } 
-
-    public static Proceso buscarProceso(int ID){
-        try (BufferedReader br = new BufferedReader(new FileReader(pathProcesos))) {
-            String linea;
-            while ((linea = br.readLine()) != null){
-                String[] datos = linea.split(DATA_SEPARATOR);
-                if(Integer.parseInt(datos[0])==ID){
-                    Proceso proceso= new Proceso(datos[1], datos[2]);
-                    proceso.setID(Integer.parseInt(datos[0]));
-                    return proceso;
+    public static ArrayList<Maquina> retornarMaquinasNOAsignadas(Tecnico tecnico){
+         ArrayList<Maquina> lista_final= new ArrayList<>();
+         ArrayList<Maquina> lista_m= Fichero.leerMaquinas();
+         ArrayList<Maquina> lista_m_ya_asignadas= new ArrayList<>();
+         System.out.print(tecnico.getID() + "\n");
+         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinasTecnicos))) {
+             String linea;
+             while ((linea = br.readLine()) != null){
+                 String[] datos = linea.split(DATA_SEPARATOR);
+                 if(Integer.parseInt(datos[0])==tecnico.getID()){
+                     Maquina maquina= new Maquina();
+                     maquina=Fichero.buscarMaquina(Integer.parseInt(datos[1]));
+                     lista_m_ya_asignadas.add(maquina);
+                 }
              }
-            }
-        } 
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
+         } 
+         catch (IOException e) {
+             e.printStackTrace();
+         }
+
+         for(int i=0; i<lista_m_ya_asignadas.size(); i++){
+             int sel=0;
+             for(int i2=0; i2<lista_m.size(); i2++){
+                 if(lista_m.get(i2).getID()==lista_m_ya_asignadas.get(i).getID())
+                    sel++; 
+             }
+             System.out.print(sel + "\n");
+             if(sel==0)
+                 lista_final.add(lista_m_ya_asignadas.get(i)); System.out.print(" Se guardo \n");
+         }
+         
+         return lista_final;
+     }
     
 }
      
     
 
+/*
+-Implementar Menu_tecnico del proyecto anterior
+-Creacion de Jpanels: ConsultarTecnicoparaAsignar, ConsultarMaquinasparaAsignar
+-Nuevo metodo llamado "leerTecnicos"
+-Nuevo metodo llamado "guardarOpera" 
+-Nuevo metodo llamado "guardarMaquinasTecnicos"
+-Asignar tecnico a maquina es funcional
+
+
+*/

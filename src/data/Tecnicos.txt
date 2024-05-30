@@ -1,0 +1,3 @@
+0,Thom,Yorke,18000000,cabezaradiador@coldmail.com,7,10,1968
+1,Kanye,West,20000000,Ye@Hotmail.com,8,6,1977
+2,Jay,Kay,12000000,Ferrari@rotmaip.com,30,12,1969

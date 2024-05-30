@@ -98,14 +98,14 @@ public class Menu extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        /*Menu_Tecnico menu_tecnico= new Menu_Tecnico();
+        Menu_Tecnico menu_tecnico= new Menu_Tecnico();
         menu_tecnico.setSize(736,449);
         menu_tecnico.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
         Background.add(menu_tecnico, BorderLayout.CENTER);
         Background.revalidate();
-        Background.repaint();*/
+        Background.repaint();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

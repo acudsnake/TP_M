@@ -3,12 +3,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Opera {
+    private int ID;
     private LocalDate  fechaInicio;
     private LocalDate  fechaFinal;
     private int turno;
     private ArrayList<Maquina> maquina;
     private ArrayList<Tecnico> tecnico;
     
+    public Opera() {
+    }
 
     public Opera(LocalDate fechaInicio, LocalDate fechaFinal, int turno) {
         this.fechaInicio = fechaInicio;
@@ -16,7 +19,6 @@ public class Opera {
         this.turno = turno;
     }
     
-
     public int getTurno() {
         return turno;
     }
@@ -55,6 +57,14 @@ public class Opera {
 
     public void setFechaFinal(LocalDate fechaFinal) {
         this.fechaFinal = fechaFinal;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
     
     
