@@ -1,7 +1,5 @@
 package GUI;
 import clases.Fichero;
-import static clases.Fichero.buscar_planta;
-import static clases.Fichero.buscar_proceso;
 import clases.Planta;
 import clases.Proceso;
 import java.awt.BorderLayout;
@@ -22,9 +20,13 @@ public class EliminarProceso extends javax.swing.JPanel {
  
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Nombre", "Complejidad", "Selecionado"};
-           boolean [] editable= {false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
+           String [] columnas= new String[]{"Nombre", "Complejidad", "ID", "Selecionado"};
+           boolean [] editable= {false, false, false, true};
+           Class[] types =new Class[]{
+               java.lang.Object.class,
+               java.lang.Object.class, 
+               java.lang.Object.class, 
+               java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
            public Class getColumnClass(int i){
                return types[i];
@@ -35,12 +37,13 @@ public class EliminarProceso extends javax.swing.JPanel {
            };
            limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Proceso> lista_procesos= Fichero.leerTodaslosProcesos();
+           ArrayList<Proceso> lista_procesos= Fichero.leerProcesos();
            for(int i=0; i<lista_procesos.size(); i++){
                 Proceso p= (Proceso) lista_procesos.get(i);
                 datos[0]= String.valueOf(p.getNombre());
                 datos[1]= String.valueOf(p.getComplejidad());
-                datos[2]=false;
+                datos[2]= p.getID();
+                datos[3]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
@@ -196,15 +199,17 @@ public class EliminarProceso extends javax.swing.JPanel {
         ArrayList<Proceso> lista = new ArrayList<>();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 2)){
+            if((Boolean) Table.getValueAt(i, 3)){
                 seleccion++;
                 Proceso p= new Proceso((String) Table.getValueAt(i, 0), (String) Table.getValueAt(i, 1));
+                p.setID((int) Table.getValueAt(i, 2));
                 lista.add(p);
             }
         }
         if(seleccion!=0){
             for(int i=0; i<lista.size(); i++){
                 Fichero.eliminarProceso(lista.get(i));
+                Fichero.eliminarPlantas_Procesos(lista.get(i));
                 imprimir_tabla();
             }
             JOptionPane.showMessageDialog(null, "Se elimino correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);

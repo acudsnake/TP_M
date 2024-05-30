@@ -3,6 +3,7 @@ package clases;
 import java.util.ArrayList;
 
 public class Proceso {
+    private int ID;
     private String nombre;
     private String complejidad;
     private ArrayList<Planta> planta; //1..*
@@ -38,6 +39,14 @@ public class Proceso {
 
     public void setPlanta(ArrayList<Planta> planta) {
         this.planta = planta;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
 

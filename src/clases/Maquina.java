@@ -1,14 +1,15 @@
 package clases;
-
 import java.util.ArrayList;
 
 
 public class Maquina {
+    private int ID;
     private String marca;
     private String modelo;
     private int numero;
     private String estado;
-    private Planta planta; //1..* //verificar con el diagrama de dominio
+    private Planta planta; //1
+    private int plantaId; //1
     private Opera opera;
 
     public Maquina( ) {
@@ -21,7 +22,6 @@ public class Maquina {
         this.estado = estado;
     }
     
-
     public String getMarca() {
         return marca;
     }
@@ -68,6 +68,22 @@ public class Maquina {
 
     public void setPlanta(Planta planta) {
         this.planta = planta;
+    }
+    
+   public int getPlantaId() {
+        return plantaId;
+    }
+
+    public void setPlantaId(int plantaId) {
+        this.plantaId = plantaId;
+    }
+    
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
 

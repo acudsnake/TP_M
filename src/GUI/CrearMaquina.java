@@ -3,21 +3,36 @@ import clases.*;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class CrearMaquina extends javax.swing.JPanel {
     public CrearMaquina() {
         initComponents();
-        imprimir_tabla();
+        cargarTablaPlantas();
     }
 
+    private void cargarTablaPlantas() {
+        DefaultTableModel model = (DefaultTableModel) tablaPlantas.getModel();
+        ArrayList<Planta> plantas = Fichero.leerPlantas();
+        for (Planta p : plantas) {
+            model.addRow(new Object[] {
+                p.getId(),
+                p.getColor(),
+                p.getSuperficie(),
+                false
+            });
+        }
+        tablaPlantas.setModel(model);
+    }
     
+    /*
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "Selecionado"};
-           boolean [] editable= {false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
+           String [] columnas= new String[]{"Color", "Superficie", "ID","Selecionado"};
+           boolean [] editable= {false, false, false, true};
+           Class[] types =new Class[]{java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
            public Class getColumnClass(int i){
                return types[i];
@@ -33,12 +48,13 @@ public class CrearMaquina extends javax.swing.JPanel {
                 Planta p= (Planta) lista_platas.get(i);
                 datos[0]= String.valueOf(p.getColor());
                 datos[1]= p.getSuperficie();
-                datos[2]=false;
+                datos[2]= p.getId();
+                datos[3]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
        }
-     
+     */
     
     /*public void limpiar(JTable tabla, DefaultTableModel modelo){
         if(modelo.getRowCount()>0){
@@ -55,137 +71,175 @@ public class CrearMaquina extends javax.swing.JPanel {
     private void initComponents() {
 
         Background = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        botonVolver = new javax.swing.JButton();
+        botonGuardar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        fieldMarca = new javax.swing.JTextField();
+        fieldNumero = new javax.swing.JTextField();
+        fieldModelo = new javax.swing.JTextField();
+        fieldEstado = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Table = new javax.swing.JTable();
-        Marca = new javax.swing.JTextField();
-        Modelo = new javax.swing.JTextField();
-        Numero = new javax.swing.JTextField();
-        Estado = new javax.swing.JTextField();
+        tablaPlantas = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
 
-        jButton1.setText("Volver");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        botonVolver.setText("Volver");
+        botonVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                botonVolverActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Modelo");
+        botonGuardar.setText("Guardar");
+        botonGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonGuardarActionPerformed(evt);
+            }
+        });
 
-        jLabel2.setText("Marca");
+        jLabel1.setText("Marca");
+
+        jLabel2.setText("Modelo");
 
         jLabel3.setText("Numero");
 
         jLabel4.setText("Estado");
 
-        Table.setModel(new javax.swing.table.DefaultTableModel(
+        fieldMarca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldMarcaActionPerformed(evt);
+            }
+        });
+
+        fieldNumero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldNumeroActionPerformed(evt);
+            }
+        });
+
+        fieldModelo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldModeloActionPerformed(evt);
+            }
+        });
+
+        fieldEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldEstadoActionPerformed(evt);
+            }
+        });
+
+        tablaPlantas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Color", "Superficie", "Seleccionar", "Title 4"
+                "ID", "Color", "Superficie", "Seleccionar"
             }
-        ));
-        Table.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                TableMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(Table);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
 
-        Marca.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MarcaActionPerformed(evt);
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
+        tablaPlantas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaPlantasMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaPlantas);
+        if (tablaPlantas.getColumnModel().getColumnCount() > 0) {
+            tablaPlantas.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         jLabel5.setText("Plantas");
 
-        jButton2.setText("Guardar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel6.setText("Cargar maquina");
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
         BackgroundLayout.setHorizontalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1))
+                        .addGap(39, 39, 39)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4))
+                        .addGap(25, 25, 25)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fieldNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fieldModelo, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fieldMarca, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fieldEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                        .addGap(0, 77, Short.MAX_VALUE)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                                .addComponent(botonGuardar)
+                                .addGap(6, 6, 6))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 578, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(81, 81, 81))))
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addGap(352, 352, 352)
-                        .addComponent(jLabel5)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                .addContainerGap(153, Short.MAX_VALUE)
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(BackgroundLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(Marca, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(BackgroundLayout.createSequentialGroup()
-                                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(Modelo)
-                                    .addComponent(Estado)
-                                    .addComponent(Numero, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(268, 268, 268))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(137, 137, 137))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(50, 50, 50))
+                        .addComponent(botonVolver)
+                        .addGap(232, 232, 232)
+                        .addComponent(jLabel6)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(BackgroundLayout.createSequentialGroup()
+                .addGap(353, 353, 353)
+                .addComponent(jLabel5)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botonVolver)
+                    .addComponent(jLabel6))
+                .addGap(36, 36, 36)
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fieldMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(fieldModelo)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(fieldNumero)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(Modelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(Numero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(Estado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fieldEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(jButton2)
-                .addGap(48, 48, 48))
+                .addComponent(botonGuardar)
+                .addGap(54, 54, 54))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -200,82 +254,108 @@ public class CrearMaquina extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_Maquina menu_maquina= new Menu_Maquina();
-        menu_maquina.setSize(736,449);
-        menu_maquina.setLocation(0,0);
+    private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
+        JPanel menu = new Menu_Maquina();
+        menu.setSize(736,449);
+        menu.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_maquina, BorderLayout.CENTER);
+        Background.add(menu, BorderLayout.CENTER);
         Background.revalidate();
-        Background.repaint(); 
-    }//GEN-LAST:event_jButton1ActionPerformed
+        Background.repaint();
+    }//GEN-LAST:event_botonVolverActionPerformed
 
-    private void MarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MarcaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_MarcaActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(Marca.getText().isEmpty() || Modelo.getText().isEmpty() || Numero.getText().isEmpty() || Estado.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else{
-        int seleccion=0;
-        Planta p= new Planta();
-        for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 2)){
-                seleccion++;
-                p.setColor((String) Table.getValueAt(i, 0));
-                p.setSuperficie((int) Table.getValueAt(i, 1));}
-        }
-        if(seleccion!=1){
-            JOptionPane.showMessageDialog(null, "Seleccione una planta", "Ok", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else{
-        Maquina m= new Maquina(Marca.getText(), Modelo.getText(), Integer.parseInt(Numero.getText()), Estado.getText());
-        m.setPlanta(p);
-        Fichero.guardar_maquina(m);
-        JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-        }
-        Marca.setText("");
-        Modelo.setText("");
-        Numero.setText("");
-        Estado.setText("");
-        for (int i = 0; i < Table.getRowCount(); i++) {
-                  Table.setValueAt(false, i, 2);
-        }
+    private void botonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGuardarActionPerformed
+        if (fieldEstado.getText().isEmpty() || fieldMarca.getText().isEmpty() || fieldNumero.getText().isEmpty() || fieldModelo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.ERROR_MESSAGE);
+            return;
         }
         
-    }//GEN-LAST:event_jButton2ActionPerformed
+        // Buscar planta seleccionado en la tabla para asignar a esta nueva maquina
+        Planta p = new Planta();
+        boolean found = false;
+        for (int i = 0; i < tablaPlantas.getRowCount(); i++) {
+            // Si esta planta ha sido seleccionada...
+            if ((Boolean) tablaPlantas.getValueAt(i, 3)) {
+                p.setId((int) tablaPlantas.getValueAt(i, 0));
+                p.setColor((String) tablaPlantas.getValueAt(i, 1));
+                p.setSuperficie((int) tablaPlantas.getValueAt(i, 2));
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            JOptionPane.showMessageDialog(null, "Seleccione una planta a la cual asignar la maquina", "Ok", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        Maquina m = new Maquina(fieldMarca.getText(), fieldModelo.getText(), Integer.parseInt(fieldNumero.getText()), fieldEstado.getText());
+        
+        // Generar nuevo id para esta maquina y guardarla junto con su asociacion
+        int id = Fichero.obtenerSiguenteCodigo(Fichero.pathMaquinas);
+        m.setID(id);
+        Fichero.guardarMaquina(m);
+        Fichero.guardarPlantaMaquina(p, m);
+        
+        JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        
+        // Limpiar campos para poder añadir otro proceso.
+        //fieldMarca.setText("");
+        //fieldModelo.setText("");
+        //fieldNumero.setText("");
+        //fieldEstado.setText("");
+        
+        //for (int i = 0; i < tablaPlantas.getRowCount(); i++) {
+        //    tablaPlantas.setValueAt(false, i, 3);
+        //}
+    }//GEN-LAST:event_botonGuardarActionPerformed
 
-    
-    private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
-            int selectedRow = Table.getSelectedRow();
-            if ((Boolean)Table.getValueAt(selectedRow , 2)) {
+    private void fieldMarcaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldMarcaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldMarcaActionPerformed
+
+    private void fieldNumeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldNumeroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldNumeroActionPerformed
+
+    private void fieldModeloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldModeloActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldModeloActionPerformed
+
+    private void fieldEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldEstadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldEstadoActionPerformed
+
+    private void tablaPlantasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPlantasMouseClicked
+        /*int selectedRow = Table.getSelectedRow();
+            if ((Boolean)Table.getValueAt(selectedRow , 3)) {
                for (int i = 0; i < Table.getRowCount(); i++) {
                if ( i != selectedRow) {
-                  Table.setValueAt(false, i, 2);
+                  Table.setValueAt(false, i, 3);
                }
              }
-        }
-    }//GEN-LAST:event_TableMouseClicked
+        }*/
+    }//GEN-LAST:event_tablaPlantasMouseClicked
 
+    
 
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
-    private javax.swing.JTextField Estado;
-    private javax.swing.JTextField Marca;
-    private javax.swing.JTextField Modelo;
-    private javax.swing.JTextField Numero;
-    private javax.swing.JTable Table;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton botonGuardar;
+    private javax.swing.JButton botonVolver;
+    private javax.swing.JTextField fieldEstado;
+    private javax.swing.JTextField fieldMarca;
+    private javax.swing.JTextField fieldModelo;
+    private javax.swing.JTextField fieldNumero;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tablaPlantas;
     // End of variables declaration//GEN-END:variables
 }

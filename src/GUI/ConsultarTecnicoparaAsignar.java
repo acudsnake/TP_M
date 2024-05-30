@@ -1,29 +1,32 @@
 package GUI;
 import clases.Fichero;
-import clases.*;
+import clases.Tecnico;
 import java.awt.BorderLayout;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 
-public class EliminarPlanta extends javax.swing.JPanel {
+public class ConsultarTecnicoparaAsignar extends javax.swing.JPanel {
     DefaultTableModel model = new DefaultTableModel();
-    
-    public EliminarPlanta() {
+
+    public ConsultarTecnicoparaAsignar() {
         initComponents();
         imprimir_tabla();
+
     }
  
-
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "ID","Selecionado"};
-           boolean [] editable= {false, false, false, true};
+           String [] columnas= new String[]{"Nombre", "Apellido", "DNI","Contacto","Fecha de Nacimiento","ID","Selecionado"};
+           boolean [] editable= {false, false, false, false,false, false, true};
            Class[] types =new Class[]{
-               java.lang.Object.class, 
+               java.lang.Object.class,
+               java.lang.Object.class,
+               java.lang.Object.class,
+               java.lang.Object.class,
                java.lang.Object.class, 
                java.lang.Object.class, 
                java.lang.Boolean.class};
@@ -37,13 +40,16 @@ public class EliminarPlanta extends javax.swing.JPanel {
            };
            limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Planta> lista_platas= Fichero.leerPlantas();
-           for(int i=0; i<lista_platas.size(); i++){
-                Planta p= (Planta) lista_platas.get(i);
-                datos[0]= String.valueOf(p.getColor());
-                datos[1]= p.getSuperficie();
-                datos[2]= p.getId();
-                datos[3]=false;
+           ArrayList<Tecnico> lista_tecnico= Fichero.leerTecnicos();
+           for(int i=0; i<lista_tecnico.size(); i++){
+                Tecnico t= (Tecnico) lista_tecnico.get(i);
+                datos[0]= String.valueOf(t.getNombre());
+                datos[1]= String.valueOf(t.getApellido());
+                datos[2]=t.getDNI();
+                datos[3]=String.valueOf(t.getContacto());
+                datos[4]=t.getFechaNacimiento().getDayOfMonth() + "/" + t.getFechaNacimiento().getMonthValue()+ "/" +t.getFechaNacimiento().getYear();
+                datos[5]=t.getID();
+                datos[6]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
@@ -66,8 +72,8 @@ public class EliminarPlanta extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         Table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        Buscador = new javax.swing.JTextField();
+        Seleccion = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -92,13 +98,23 @@ public class EliminarPlanta extends javax.swing.JPanel {
 
         jLabel1.setText("Buscar");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        Buscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                BuscadorActionPerformed(evt);
+            }
+        });
+        Buscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                BuscadorKeyTyped(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "Cant. Maquinas", "Cant. Procesos" }));
+        Seleccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "ID", "Cant. Maquinas", "Cant. Procesos" }));
+        Seleccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SeleccionActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Volver");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -107,14 +123,14 @@ public class EliminarPlanta extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setText("Eliminar");
+        jButton2.setText("Continuar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Seleccione una planta que quiera eliminar y presione el boton de \"Continuar\"");
+        jLabel2.setText("Seleccione un tecnico que desee asignarle una maquina y presione el boton de \"Continuar\"");
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -128,22 +144,22 @@ public class EliminarPlanta extends javax.swing.JPanel {
                         .addGap(131, 131, 131)
                         .addComponent(jLabel1)
                         .addGap(27, 27, 27)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(188, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(38, 38, 38))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59))
-            .addGroup(BackgroundLayout.createSequentialGroup()
-                .addGap(182, 182, 182)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addGap(38, 38, 38))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(59, 59, 59))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(114, 114, 114))))))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,8 +169,8 @@ public class EliminarPlanta extends javax.swing.JPanel {
                         .addGap(30, 30, 30)
                         .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(BackgroundLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jButton1)))
@@ -179,82 +195,83 @@ public class EliminarPlanta extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void BuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_BuscadorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_Planta menu_planta= new Menu_Planta();
-        menu_planta.setSize(736,449);
-        menu_planta.setLocation(0,0);
+        Menu_Tecnico menu_tecnico= new Menu_Tecnico();
+        menu_tecnico.setSize(736,449);
+        menu_tecnico.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_planta, BorderLayout.CENTER);
+        Background.add(menu_tecnico, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ArrayList<Planta> lista= new ArrayList();
+        Tecnico tecnico= new Tecnico();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 3)){
+            if((Boolean) Table.getValueAt(i, 6)){
                 seleccion++;
-                Planta p= new Planta((String) Table.getValueAt(i, 0), (int) Table.getValueAt(i, 1));
-                p.setId((int) Table.getValueAt(i, 2));
-                lista.add(p);
+                tecnico.setNombre((String) Table.getValueAt(i, 0));
+                tecnico.setApellido((String) Table.getValueAt(i, 1));
+                tecnico.setDNI((int) Table.getValueAt(i, 2));
+                tecnico.setContacto((String) Table.getValueAt(i, 3));
+                String[] fecha = ((String) Table.getValueAt(i, 4)).split("/");
+                int dia = Integer.parseInt(fecha[0]);
+                int mes = Integer.parseInt(fecha[1]);
+                int año = Integer.parseInt(fecha[2]);
+                LocalDate fechaf = LocalDate.of(año, mes, dia);
+                tecnico.setFechaNacimiento(fechaf);
+                tecnico.setID((int) Table.getValueAt(i, 5));
             }
         }
-        if(seleccion>0){
-            for(int i=0; i<lista.size(); i++){
-                Fichero.eliminarPlanta(lista.get(i));
-                
-                //Eliminar maquinas que tenia asignadas
-                ArrayList<Maquina> maquinas= Fichero.leerMaquinas();
-                for(int i2=0; i2<maquinas.size(); i2++){
-                    if(maquinas.get(i2).getPlantaId()==lista.get(i).getId())
-                        Fichero.eliminarMaquina(maquinas.get(i2));
-                }
-                
-                //eliminar o desasignar procesos que tenia asignado
-                Fichero.eliminarPlantas_Procesos(lista.get(i));
-                ArrayList<Proceso> procesos= new ArrayList();
-                procesos= Fichero.leerProcesos();
-                for(int i2=0; i2<procesos.size(); i2++){
-                    if(!Fichero.verificar_si_proceso_esta_asignado(procesos.get(i2))){
-                        Fichero.eliminarProceso(procesos.get(i2));
-                    }    
-                }
-                imprimir_tabla();
-            }
-            JOptionPane.showMessageDialog(null, "Se elimino correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
-            lista.clear();
+        if(seleccion!=0){
+            ConsultarMaquinaparaAsignar maquina_p= new ConsultarMaquinaparaAsignar(tecnico);
+            maquina_p.setSize(736,449);
+            maquina_p.setLocation(0,0);
+            Background.setLayout(new BorderLayout());
+            Background.removeAll();
+            Background.add(maquina_p, BorderLayout.CENTER);
+            Background.revalidate();
+            Background.repaint();
         }
         else
             JOptionPane.showMessageDialog(null, "Seleccione una planta", "Ok", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
-        /*int selectedRow = Table.getSelectedRow();
-            if ((Boolean)Table.getValueAt(selectedRow , 3)) {
+        int selectedRow = Table.getSelectedRow();
+            if ((Boolean)Table.getValueAt(selectedRow , 6)) {
                for (int i = 0; i < Table.getRowCount(); i++) {
                if ( i != selectedRow) {
-                  Table.setValueAt(false, i, 3);
+                  Table.setValueAt(false, i, 6);
                }
              }
-        }*/
+        }
     }//GEN-LAST:event_TableMouseClicked
+
+    private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped
+
+    }//GEN-LAST:event_BuscadorKeyTyped
+
+    private void SeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionActionPerformed
+
+    }//GEN-LAST:event_SeleccionActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
+    private javax.swing.JTextField Buscador;
+    private javax.swing.JComboBox<String> Seleccion;
     private javax.swing.JTable Table;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

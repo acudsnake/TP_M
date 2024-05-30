@@ -3,6 +3,7 @@ package GUI;
 import clases.Fichero;
 import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 
 public class Menu_Maquina extends javax.swing.JPanel {
@@ -16,48 +17,60 @@ public class Menu_Maquina extends javax.swing.JPanel {
     private void initComponents() {
 
         Background = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
+        botonVolver = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jToggleButton4 = new javax.swing.JToggleButton();
+        botonEditar = new javax.swing.JButton();
+        botonEliminar = new javax.swing.JButton();
+        botonConsultar = new javax.swing.JButton();
+        botonCargar = new javax.swing.JButton();
 
-        jButton1.setText("Volver");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        botonVolver.setText("Volver");
+        botonVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jToggleButton1.setText("Cargar");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
-            }
-        });
-
-        jToggleButton3.setText("Editar");
-        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton3ActionPerformed(evt);
-            }
-        });
-
-        jToggleButton2.setText("Consultar");
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
+                botonVolverActionPerformed(evt);
             }
         });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Gestionar Maquina");
 
-        jToggleButton4.setText("Eliminar");
-        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
+        botonEditar.setText("Editar");
+        botonEditar.setMaximumSize(new java.awt.Dimension(65, 23));
+        botonEditar.setMinimumSize(new java.awt.Dimension(65, 23));
+        botonEditar.setPreferredSize(new java.awt.Dimension(65, 23));
+        botonEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton4ActionPerformed(evt);
+                botonEditarActionPerformed(evt);
+            }
+        });
+
+        botonEliminar.setText("Eliminar");
+        botonEliminar.setMaximumSize(new java.awt.Dimension(65, 23));
+        botonEliminar.setMinimumSize(new java.awt.Dimension(65, 23));
+        botonEliminar.setPreferredSize(new java.awt.Dimension(65, 23));
+        botonEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEliminarActionPerformed(evt);
+            }
+        });
+
+        botonConsultar.setText("Consultar");
+        botonConsultar.setMaximumSize(new java.awt.Dimension(65, 23));
+        botonConsultar.setMinimumSize(new java.awt.Dimension(65, 23));
+        botonConsultar.setPreferredSize(new java.awt.Dimension(65, 23));
+        botonConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonConsultarActionPerformed(evt);
+            }
+        });
+
+        botonCargar.setText("Cargar");
+        botonCargar.setMaximumSize(new java.awt.Dimension(65, 23));
+        botonCargar.setMinimumSize(new java.awt.Dimension(65, 23));
+        botonCargar.setPreferredSize(new java.awt.Dimension(65, 23));
+        botonCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonCargarActionPerformed(evt);
             }
         });
 
@@ -66,39 +79,39 @@ public class Menu_Maquina extends javax.swing.JPanel {
         BackgroundLayout.setHorizontalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1))
-                    .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addGap(257, 257, 257)
-                        .addComponent(jLabel1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(BackgroundLayout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(58, 58, 58)
-                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
-                .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
-                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59))
+                        .addComponent(botonVolver)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                        .addGap(88, 88, 88)
+                        .addComponent(botonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(BackgroundLayout.createSequentialGroup()
+                                .addComponent(botonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(46, 46, 46)
+                                .addComponent(botonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(37, 37, 37)
+                                .addComponent(botonConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(64, 64, 64))))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonVolver)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel1)
-                .addGap(102, 102, 102)
+                .addGap(104, 104, 104)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(175, Short.MAX_VALUE))
+                    .addComponent(botonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(163, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -113,7 +126,7 @@ public class Menu_Maquina extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void botonVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonVolverActionPerformed
         Menu menu = new Menu();
         menu.setSize(736,449);
         menu.setLocation(0,0);
@@ -122,53 +135,46 @@ public class Menu_Maquina extends javax.swing.JPanel {
         Background.add(menu, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_botonVolverActionPerformed
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        CrearMaquina crearmaquina= new CrearMaquina();
-        crearmaquina.setSize(736,449);
-        crearmaquina.setLocation(0,0);
-        Background.setLayout(new BorderLayout());
-        Background.removeAll();
-        Background.add(crearmaquina, BorderLayout.CENTER);
-        Background.revalidate();
-        Background.repaint();
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
+    private void botonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEditarActionPerformed
+        //JPanel menu = new EditarMaquina();
+        //menu.setSize(736,449);
+        //menu.setLocation(0,0);
+        //Background.setLayout(new BorderLayout());
+        //Background.removeAll();
+        //Background.add(menu, BorderLayout.CENTER);
+        //Background.revalidate();
+        //Background.repaint();
+    }//GEN-LAST:event_botonEditarActionPerformed
 
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        ConsultarMaquina consultarmaquina= new ConsultarMaquina();
-        consultarmaquina.setSize(736,449);
-        consultarmaquina.setLocation(0,0);
-        Background.setLayout(new BorderLayout());
-        Background.removeAll();
-        Background.add(consultarmaquina, BorderLayout.CENTER);
-        Background.revalidate();
-        Background.repaint();
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
-
-    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+    private void botonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEliminarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton3ActionPerformed
+    }//GEN-LAST:event_botonEliminarActionPerformed
 
-    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
-        EliminarMaquina eliminar_maquina= new EliminarMaquina();
-        eliminar_maquina.setSize(736,449);
-        eliminar_maquina.setLocation(0,0);
+    private void botonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConsultarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonConsultarActionPerformed
+
+    private void botonCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCargarActionPerformed
+        JPanel menu = new CrearMaquina();
+        menu.setSize(736,449);
+        menu.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(eliminar_maquina, BorderLayout.CENTER);
+        Background.add(menu, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
-    }//GEN-LAST:event_jToggleButton4ActionPerformed
+    }//GEN-LAST:event_botonCargarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton botonCargar;
+    private javax.swing.JButton botonConsultar;
+    private javax.swing.JButton botonEditar;
+    private javax.swing.JButton botonEliminar;
+    private javax.swing.JButton botonVolver;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JToggleButton jToggleButton3;
-    private javax.swing.JToggleButton jToggleButton4;
     // End of variables declaration//GEN-END:variables
 }

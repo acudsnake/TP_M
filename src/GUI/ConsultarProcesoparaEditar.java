@@ -1,8 +1,5 @@
 package GUI;
 import clases.Fichero;
-import static clases.Fichero.buscar_planta;
-import static clases.Fichero.buscar_proceso;
-import clases.Planta;
 import clases.Proceso;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -21,9 +18,13 @@ public class ConsultarProcesoparaEditar extends javax.swing.JPanel {
  
     public void imprimir_tabla(){
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Nombre", "Complejidad", "Selecionado"};
-           boolean [] editable= {false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
+           String [] columnas= new String[]{"Nombre", "Complejidad", "ID","Selecionado"};
+           boolean [] editable= {false, false, false, true};
+           Class[] types =new Class[]{
+               java.lang.Object.class,
+               java.lang.Object.class, 
+               java.lang.Object.class, 
+               java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
            public Class getColumnClass(int i){
                return types[i];
@@ -34,12 +35,13 @@ public class ConsultarProcesoparaEditar extends javax.swing.JPanel {
            };
            //limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Proceso> lista_procesos= Fichero.leerTodaslosProcesos();
+           ArrayList<Proceso> lista_procesos= Fichero.leerProcesos();
            for(int i=0; i<lista_procesos.size(); i++){
                 Proceso p= (Proceso) lista_procesos.get(i);
                 datos[0]= String.valueOf(p.getNombre());
                 datos[1]= String.valueOf(p.getComplejidad());
-                datos[2]=false;
+                datos[2]= p.getID();
+                datos[3]=false;
                 model.addRow(datos);
            }
            Table.setModel(model);
@@ -187,14 +189,15 @@ public class ConsultarProcesoparaEditar extends javax.swing.JPanel {
         Proceso p= new Proceso();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 2)){
+            if((Boolean) Table.getValueAt(i, 3)){
                 seleccion++;
                 p.setNombre((String) Table.getValueAt(i, 0));
                 p.setComplejidad((String) Table.getValueAt(i, 1));
+                p.setID((int) Table.getValueAt(i, 2));
             }
         }
         if(seleccion!=0){
-            EditarProceso editarproceso= new EditarProceso(buscar_proceso(p));
+            EditarProceso editarproceso= new EditarProceso(p);
             editarproceso.setSize(736,449);
             editarproceso.setLocation(0,0);
             Background.setLayout(new BorderLayout());
@@ -209,10 +212,10 @@ public class ConsultarProcesoparaEditar extends javax.swing.JPanel {
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
         int selectedRow = Table.getSelectedRow();
-            if ((Boolean)Table.getValueAt(selectedRow , 2)) {
+            if ((Boolean)Table.getValueAt(selectedRow , 3)) {
                for (int i = 0; i < Table.getRowCount(); i++) {
                if ( i != selectedRow) {
-                  Table.setValueAt(false, i, 2);
+                  Table.setValueAt(false, i, 3);
                }
              }
         }

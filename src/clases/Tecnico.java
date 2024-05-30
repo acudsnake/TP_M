@@ -7,19 +7,18 @@ public class Tecnico {
     private int DNI;
     private String contacto;
     private LocalDate fechaNacimiento;
+    int ID;
     private Opera opera;
-    
+
     public Tecnico() {
-        
     }
     
-    public Tecnico(String nombre, String apellido,int DNI, String contacto, LocalDate fechaNacimiento, Opera opera) {
+    public Tecnico(String nombre, String apellido,int DNI, String contacto, LocalDate fechaNacimiento) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.fechaNacimiento = fechaNacimiento;
         this.DNI = DNI;
         this.contacto = contacto;
-        this.opera = opera;
     }
 
     public String getNombre() {
@@ -70,6 +69,14 @@ public class Tecnico {
 
     public void setOpera(Opera opera) {
         this.opera = opera;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
     
     
