@@ -38,7 +38,7 @@ public class ConsultarTecnicoparaAsignar extends javax.swing.JPanel {
                return editable[column];
            }
            };
-           limpiar(Table, model);
+           //limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
            ArrayList<Tecnico> lista_tecnico= Fichero.leerTecnicos();
            for(int i=0; i<lista_tecnico.size(); i++){
@@ -230,6 +230,7 @@ public class ConsultarTecnicoparaAsignar extends javax.swing.JPanel {
             }
         }
         if(seleccion!=0){
+            //ConsultarMaquinaparaAsignar maquina_p= new ConsultarMaquinaparaAsignar(tecnico);
             ConsultarMaquinaparaAsignar maquina_p= new ConsultarMaquinaparaAsignar(tecnico);
             maquina_p.setSize(736,449);
             maquina_p.setLocation(0,0);

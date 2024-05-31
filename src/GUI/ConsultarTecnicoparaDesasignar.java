@@ -1,6 +1,5 @@
 package GUI;
 import clases.Fichero;
-import clases.Maquina;
 import clases.Tecnico;
 import java.awt.BorderLayout;
 import java.time.LocalDate;
@@ -10,26 +9,25 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 
-public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
+public class ConsultarTecnicoparaDesasignar extends javax.swing.JPanel {
     DefaultTableModel model = new DefaultTableModel();
-    Tecnico t= new Tecnico();
 
-    public ConsultarMaquinaparaAsignar(Tecnico tecnico) {
+    public ConsultarTecnicoparaDesasignar() {
         initComponents();
-        t=tecnico;
         imprimir_tabla();
+
     }
  
     public void imprimir_tabla(){
-
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Marca", "Modelo", "Numero","Estado","ID","Selecionado"};
-           boolean [] editable= {false, false, false, false,false, true};
+           String [] columnas= new String[]{"Nombre", "Apellido", "DNI","Contacto","Fecha de Nacimiento","ID","Selecionado"};
+           boolean [] editable= {false, false, false, false,false, false, true};
            Class[] types =new Class[]{
                java.lang.Object.class,
                java.lang.Object.class,
                java.lang.Object.class,
                java.lang.Object.class,
+               java.lang.Object.class, 
                java.lang.Object.class, 
                java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
@@ -40,18 +38,19 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
                return editable[column];
            }
            };
-           limpiar(Table, model);
+           //limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Maquina> lista_maquinas= Fichero.retornarMaquinasNOAsignadas(t);
-           for(int i=0; i<lista_maquinas.size(); i++){
-                Maquina m= (Maquina) lista_maquinas.get(i);
-                    datos[0]= String.valueOf(m.getMarca());
-                    datos[1]= String.valueOf(m.getModelo());
-                    datos[2]=m.getNumero();
-                    datos[3]=String.valueOf(m.getEstado());
-                    datos[4]=m.getID();
-                    datos[5]=false;
-                    model.addRow(datos);           
+           ArrayList<Tecnico> lista_tecnico= Fichero.retornarTecnicosAsignados();
+           for(int i=0; i<lista_tecnico.size(); i++){
+                Tecnico t= (Tecnico) lista_tecnico.get(i);
+                datos[0]= String.valueOf(t.getNombre());
+                datos[1]= String.valueOf(t.getApellido());
+                datos[2]=t.getDNI();
+                datos[3]=String.valueOf(t.getContacto());
+                datos[4]=t.getFechaNacimiento().getDayOfMonth() + "/" + t.getFechaNacimiento().getMonthValue()+ "/" +t.getFechaNacimiento().getYear();
+                datos[5]=t.getID();
+                datos[6]=false;
+                model.addRow(datos);
            }
            Table.setModel(model);
        }
@@ -131,7 +130,7 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setText("Seleccione las maquinas que desee asignarle al tecnico y presione el boton de \"Continuar\"");
+        jLabel2.setText("Seleccione un tecnico que desee desasignarle una maquina y presione el boton de \"Continuar\"");
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -201,39 +200,42 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
     }//GEN-LAST:event_BuscadorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ConsultarTecnicoparaAsignar volver= new ConsultarTecnicoparaAsignar();
-        volver.setSize(736,449);
-        volver.setLocation(0,0);
+        Menu_Tecnico menu_tecnico= new Menu_Tecnico();
+        menu_tecnico.setSize(736,449);
+        menu_tecnico.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(volver, BorderLayout.CENTER);
+        Background.add(menu_tecnico, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ArrayList<Maquina> lista_maquinas = new ArrayList<>();
+        Tecnico tecnico= new Tecnico();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 5)){
+            if((Boolean) Table.getValueAt(i, 6)){
                 seleccion++;
-                Maquina maquina= new Maquina();
-                maquina.setMarca((String) Table.getValueAt(i, 0));
-                maquina.setModelo((String) Table.getValueAt(i, 1));
-                maquina.setNumero((int) Table.getValueAt(i, 2));
-                maquina.setEstado((String) Table.getValueAt(i, 3));
-                maquina.setID((int) Table.getValueAt(i, 4));
-                lista_maquinas.add(maquina);
-                
+                tecnico.setNombre((String) Table.getValueAt(i, 0));
+                tecnico.setApellido((String) Table.getValueAt(i, 1));
+                tecnico.setDNI((int) Table.getValueAt(i, 2));
+                tecnico.setContacto((String) Table.getValueAt(i, 3));
+                String[] fecha = ((String) Table.getValueAt(i, 4)).split("/");
+                int dia = Integer.parseInt(fecha[0]);
+                int mes = Integer.parseInt(fecha[1]);
+                int año = Integer.parseInt(fecha[2]);
+                LocalDate fechaf = LocalDate.of(año, mes, dia);
+                tecnico.setFechaNacimiento(fechaf);
+                tecnico.setID((int) Table.getValueAt(i, 5));
             }
         }
         if(seleccion!=0){
-            CrearOpera Opera= new CrearOpera(t, lista_maquinas, lista_maquinas.size());
-            Opera.setSize(736,449);
-            Opera.setLocation(0,0);
+            ConsultarMaquinaparaDesasignar maquina_p= new ConsultarMaquinaparaDesasignar(tecnico);
+            maquina_p.setSize(736,449);
+            maquina_p.setLocation(0,0);
             Background.setLayout(new BorderLayout());
             Background.removeAll();
-            Background.add(Opera, BorderLayout.CENTER);
+            Background.add(maquina_p, BorderLayout.CENTER);
             Background.revalidate();
             Background.repaint();
         }
@@ -242,7 +244,14 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
-
+        int selectedRow = Table.getSelectedRow();
+            if ((Boolean)Table.getValueAt(selectedRow , 6)) {
+               for (int i = 0; i < Table.getRowCount(); i++) {
+               if ( i != selectedRow) {
+                  Table.setValueAt(false, i, 6);
+               }
+             }
+        }
     }//GEN-LAST:event_TableMouseClicked
 
     private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped

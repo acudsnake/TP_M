@@ -13,6 +13,11 @@ public class Opera {
     public Opera() {
     }
 
+    public Opera(int turno, LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+        this.turno = turno;
+    }
+    
     public Opera(LocalDate fechaInicio, LocalDate fechaFinal, int turno) {
         this.fechaInicio = fechaInicio;
         this.fechaFinal = fechaFinal;

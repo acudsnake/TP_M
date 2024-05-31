@@ -1,6 +1,5 @@
 package GUI;
 import clases.Fichero;
-import clases.Maquina;
 import clases.Tecnico;
 import java.awt.BorderLayout;
 import java.time.LocalDate;
@@ -10,26 +9,25 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 
-public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
+public class EliminarTecnico extends javax.swing.JPanel {
     DefaultTableModel model = new DefaultTableModel();
-    Tecnico t= new Tecnico();
 
-    public ConsultarMaquinaparaAsignar(Tecnico tecnico) {
+    public EliminarTecnico() {
         initComponents();
-        t=tecnico;
         imprimir_tabla();
+
     }
  
     public void imprimir_tabla(){
-
            Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Marca", "Modelo", "Numero","Estado","ID","Selecionado"};
-           boolean [] editable= {false, false, false, false,false, true};
+           String [] columnas= new String[]{"Nombre", "Apellido", "DNI","Contacto","Fecha de Nacimiento","ID","Selecionado"};
+           boolean [] editable= {false, false, false, false,false, false, true};
            Class[] types =new Class[]{
                java.lang.Object.class,
                java.lang.Object.class,
                java.lang.Object.class,
                java.lang.Object.class,
+               java.lang.Object.class, 
                java.lang.Object.class, 
                java.lang.Boolean.class};
            DefaultTableModel model = new DefaultTableModel(columnas, 0){
@@ -42,16 +40,17 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
            };
            limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Maquina> lista_maquinas= Fichero.retornarMaquinasNOAsignadas(t);
-           for(int i=0; i<lista_maquinas.size(); i++){
-                Maquina m= (Maquina) lista_maquinas.get(i);
-                    datos[0]= String.valueOf(m.getMarca());
-                    datos[1]= String.valueOf(m.getModelo());
-                    datos[2]=m.getNumero();
-                    datos[3]=String.valueOf(m.getEstado());
-                    datos[4]=m.getID();
-                    datos[5]=false;
-                    model.addRow(datos);           
+           ArrayList<Tecnico> lista_tecnico= Fichero.leerTecnicos();
+           for(int i=0; i<lista_tecnico.size(); i++){
+                Tecnico t= (Tecnico) lista_tecnico.get(i);
+                datos[0]= String.valueOf(t.getNombre());
+                datos[1]= String.valueOf(t.getApellido());
+                datos[2]=t.getDNI();
+                datos[3]=String.valueOf(t.getContacto());
+                datos[4]=t.getFechaNacimiento().getDayOfMonth() + "/" + t.getFechaNacimiento().getMonthValue()+ "/" +t.getFechaNacimiento().getYear();
+                datos[5]=t.getID();
+                datos[6]=false;
+                model.addRow(datos);
            }
            Table.setModel(model);
        }
@@ -131,7 +130,7 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setText("Seleccione las maquinas que desee asignarle al tecnico y presione el boton de \"Continuar\"");
+        jLabel2.setText("Seleccione un tecnico que eliminar y presione el boton de \"Continuar\"");
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -140,27 +139,27 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(131, 131, 131)
-                        .addComponent(jLabel1)
-                        .addGap(27, 27, 27)
-                        .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(188, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 77, Short.MAX_VALUE)
                         .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                                 .addComponent(jButton2)
                                 .addGap(38, 38, 38))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(59, 59, 59))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(114, 114, 114))))))
+                                .addGap(59, 59, 59))))
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(131, 131, 131)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addGroup(BackgroundLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(27, 27, 27)
+                                .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,48 +200,61 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
     }//GEN-LAST:event_BuscadorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ConsultarTecnicoparaAsignar volver= new ConsultarTecnicoparaAsignar();
-        volver.setSize(736,449);
-        volver.setLocation(0,0);
+        Menu_Tecnico menu_tecnico= new Menu_Tecnico();
+        menu_tecnico.setSize(736,449);
+        menu_tecnico.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(volver, BorderLayout.CENTER);
+        Background.add(menu_tecnico, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ArrayList<Maquina> lista_maquinas = new ArrayList<>();
+        ArrayList<Tecnico> lista_tecnicos= new ArrayList<>();
+        
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 5)){
+            if((Boolean) Table.getValueAt(i, 6)){
                 seleccion++;
-                Maquina maquina= new Maquina();
-                maquina.setMarca((String) Table.getValueAt(i, 0));
-                maquina.setModelo((String) Table.getValueAt(i, 1));
-                maquina.setNumero((int) Table.getValueAt(i, 2));
-                maquina.setEstado((String) Table.getValueAt(i, 3));
-                maquina.setID((int) Table.getValueAt(i, 4));
-                lista_maquinas.add(maquina);
-                
+                Tecnico tecnico= new Tecnico();
+                tecnico.setNombre((String) Table.getValueAt(i, 0));
+                tecnico.setApellido((String) Table.getValueAt(i, 1));
+                tecnico.setDNI((int) Table.getValueAt(i, 2));
+                tecnico.setContacto((String) Table.getValueAt(i, 3));
+                String[] fecha = ((String) Table.getValueAt(i, 4)).split("/");
+                int dia = Integer.parseInt(fecha[0]);
+                int mes = Integer.parseInt(fecha[1]);
+                int año = Integer.parseInt(fecha[2]);
+                LocalDate fechaf = LocalDate.of(año, mes, dia);
+                tecnico.setFechaNacimiento(fechaf);
+                tecnico.setID((int) Table.getValueAt(i, 5));
+                lista_tecnicos.add(tecnico);
             }
         }
         if(seleccion!=0){
-            CrearOpera Opera= new CrearOpera(t, lista_maquinas, lista_maquinas.size());
-            Opera.setSize(736,449);
-            Opera.setLocation(0,0);
-            Background.setLayout(new BorderLayout());
-            Background.removeAll();
-            Background.add(Opera, BorderLayout.CENTER);
-            Background.revalidate();
-            Background.repaint();
+            for(int i=0; i<lista_tecnicos.size(); i++){
+                Fichero.eliminarMaquinas_Tecnicos(lista_tecnicos.get(i));
+                Fichero.eliminarTecnico(lista_tecnicos.get(i));
+                imprimir_tabla();
+            }
+            JOptionPane.showMessageDialog(null, "Se elimino correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            lista_tecnicos.clear(); 
+        
         }
         else
             JOptionPane.showMessageDialog(null, "Seleccione una planta", "Ok", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
-
+        int selectedRow = Table.getSelectedRow();
+            if ((Boolean)Table.getValueAt(selectedRow , 6)) {
+               for (int i = 0; i < Table.getRowCount(); i++) {
+               if ( i != selectedRow) {
+                  Table.setValueAt(false, i, 6);
+               }
+             }
+        }
     }//GEN-LAST:event_TableMouseClicked
 
     private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped

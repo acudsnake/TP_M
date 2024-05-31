@@ -3,18 +3,17 @@ import clases.Fichero;
 import clases.Maquina;
 import clases.Tecnico;
 import java.awt.BorderLayout;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 
-public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
+public class ConsultarMaquinaparaDesasignar extends javax.swing.JPanel {
     DefaultTableModel model = new DefaultTableModel();
     Tecnico t= new Tecnico();
 
-    public ConsultarMaquinaparaAsignar(Tecnico tecnico) {
+    public ConsultarMaquinaparaDesasignar(Tecnico tecnico) {
         initComponents();
         t=tecnico;
         imprimir_tabla();
@@ -42,7 +41,7 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
            };
            limpiar(Table, model);
            Object[] datos= new Object[columnas.length];    
-           ArrayList<Maquina> lista_maquinas= Fichero.retornarMaquinasNOAsignadas(t);
+           ArrayList<Maquina> lista_maquinas= Fichero.retornarMaquinasAsignadas(t);
            for(int i=0; i<lista_maquinas.size(); i++){
                 Maquina m= (Maquina) lista_maquinas.get(i);
                     datos[0]= String.valueOf(m.getMarca());
@@ -124,14 +123,14 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setText("Continuar");
+        jButton2.setText("Desasignar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Seleccione las maquinas que desee asignarle al tecnico y presione el boton de \"Continuar\"");
+        jLabel2.setText("Seleccione las maquinas que desee desasignarle al tecnico y presione el boton de \"Desasignar\"");
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
@@ -201,7 +200,7 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
     }//GEN-LAST:event_BuscadorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ConsultarTecnicoparaAsignar volver= new ConsultarTecnicoparaAsignar();
+        ConsultarTecnicoparaDesasignar volver= new ConsultarTecnicoparaDesasignar();
         volver.setSize(736,449);
         volver.setLocation(0,0);
         Background.setLayout(new BorderLayout());
@@ -228,14 +227,10 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
             }
         }
         if(seleccion!=0){
-            CrearOpera Opera= new CrearOpera(t, lista_maquinas, lista_maquinas.size());
-            Opera.setSize(736,449);
-            Opera.setLocation(0,0);
-            Background.setLayout(new BorderLayout());
-            Background.removeAll();
-            Background.add(Opera, BorderLayout.CENTER);
-            Background.revalidate();
-            Background.repaint();
+            for(int i=0; i<lista_maquinas.size(); i++){
+                Fichero.eliminarMaquinas_Tecnicos(t, lista_maquinas.get(i));
+                imprimir_tabla();
+            }
         }
         else
             JOptionPane.showMessageDialog(null, "Seleccione una planta", "Ok", JOptionPane.INFORMATION_MESSAGE);

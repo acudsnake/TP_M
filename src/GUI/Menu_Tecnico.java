@@ -40,13 +40,28 @@ public class Menu_Tecnico extends javax.swing.JPanel {
         });
 
         jToggleButton3.setText("Editar");
+        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton3ActionPerformed(evt);
+            }
+        });
 
         jToggleButton2.setText("Consultar");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Gestionar Tecnico");
 
         jToggleButton4.setText("Eliminar");
+        jToggleButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton4ActionPerformed(evt);
+            }
+        });
 
         jToggleButton5.setText("Cargar");
         jToggleButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -72,9 +87,6 @@ public class Menu_Tecnico extends javax.swing.JPanel {
                         .addContainerGap()
                         .addComponent(jButton1))
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addGap(257, 257, 257)
-                        .addComponent(jLabel1))
-                    .addGroup(BackgroundLayout.createSequentialGroup()
                         .addGap(87, 87, 87)
                         .addComponent(jToggleButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
@@ -90,6 +102,10 @@ public class Menu_Tecnico extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jToggleButton1)
                 .addGap(114, 114, 114))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(260, 260, 260))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,11 +151,25 @@ public class Menu_Tecnico extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        // TODO add your handling code here:
+        ConsultarTecnicoparaDesasignar desasignar = new ConsultarTecnicoparaDesasignar();
+        desasignar.setSize(736,449);
+        desasignar.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(desasignar, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jToggleButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton5ActionPerformed
-        // TODO add your handling code here:
+        CrearTecnico creartecnico = new CrearTecnico();
+        creartecnico.setSize(736,449);
+        creartecnico.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(creartecnico, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
     }//GEN-LAST:event_jToggleButton5ActionPerformed
 
     private void jToggleButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton6ActionPerformed
@@ -152,6 +182,39 @@ public class Menu_Tecnico extends javax.swing.JPanel {
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jToggleButton6ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        ConsultarTecnico consultartecnico = new ConsultarTecnico();
+        consultartecnico.setSize(736,449);
+        consultartecnico.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(consultartecnico, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jToggleButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton4ActionPerformed
+        EliminarTecnico eliminartecnico = new EliminarTecnico();
+        eliminartecnico.setSize(736,449);
+        eliminartecnico.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(eliminartecnico, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jToggleButton4ActionPerformed
+
+    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
+        ConsultarTecnicoparaEditar editartecnico = new ConsultarTecnicoparaEditar();
+        editartecnico.setSize(736,449);
+        editartecnico.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(editartecnico, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
+    }//GEN-LAST:event_jToggleButton3ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

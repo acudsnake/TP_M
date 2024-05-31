@@ -169,9 +169,7 @@ public class CrearOpera extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Date date;
-        date = jDateChooser.getDate();
-        if(sel==0 ||  date==null){
+        if(sel==0 ||  jDateChooser.getDate()==null){
             JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         else{
@@ -217,12 +215,12 @@ public class CrearOpera extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_Planta menu_agregar= new Menu_Planta();
-        menu_agregar.setSize(736,449);
-        menu_agregar.setLocation(0,0);
+        Menu_Tecnico menu= new Menu_Tecnico();
+        menu.setSize(736,449);
+        menu.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_agregar, BorderLayout.CENTER);
+        Background.add(menu, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
