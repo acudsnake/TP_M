@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.function.Predicate;
 
 public class Fichero {
     public static final String DATA_SEPARATOR = ",";
@@ -191,7 +192,31 @@ public class Fichero {
     }
     
     //--------------------------------------MAQUINAS--------------------------------------------//
+    
+    private static void eliminarLineaEnArchivo(String pathOriginal, Predicate<String> criterio) {
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathOriginal)); 
+                BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                // Mientras no sea la linea que queremos eliminar,
+                // copiara todas las lineas al archivo temporal.
+                if (!criterio.test(linea)) {
+                    writer.write(linea);
+                    writer.newLine();
+                }
+            } 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        // Elimina el archivo original y usa el del archivo temporal
+        File originalFile = new File(pathOriginal);
+        File temporalFile = new File(pathTemp);
+        originalFile.delete();
+        temporalFile.renameTo(originalFile);
+    }
+    
     public static ArrayList<Maquina> leerMaquinas(){
         ArrayList<Maquina> lista_maquinas = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
@@ -224,28 +249,45 @@ public class Fichero {
         }
     }
     
-    public static void eliminarMaquina(Maquina m){
-        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathMaquinas));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
-            String linea;  
-            String[] datos;
-            while ((linea = reader.readLine()) != null) {
-                datos = linea.split(DATA_SEPARATOR); //maquina
-                if(!(Integer.parseInt(datos[0])==m.getID())){
-                        writer.write(linea);
-                        writer.newLine();
-                    }
-            } 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }   
-        File originalFile = new File(pathMaquinas);
-        File temporalFile = new File(pathTemp);
-        originalFile.delete();
-        temporalFile.renameTo(originalFile);
+    // Eliminar maquina por ID
+    // Nota: Si la maquina esta asignada a una planta, esta asociacion sera eliminada
+    // TODO: faltaria eliminar la asociacion del tecnico con la maquina por el opera
+    // Deberia uasr un Optional para el Planta para evitar chequear por null
+    public static void eliminarMaquina(int id) {
+        Maquina m = buscarMaquina(id);
+        Planta p = m.getPlanta();
+        
+        // Codigo para eliminar la maquina de Maquinas.txt
+        Predicate<String> criterio = linea -> {
+            String[] datos = linea.split(DATA_SEPARATOR);
+            int idMaquina = Integer.parseInt(datos[0]);
+            return idMaquina == m.getID();
+        };
+        
+        eliminarLineaEnArchivo(pathMaquinas, criterio);
+        
+        // Si hay una planta asignada a esta maquina, la eliminara.
+        // De lo contrario, no pasara nada.
+        eliminarAsociacionPlantaMaquina(m);
+        //eliminarAsociacionMaquinaTecnico();
         
     }
+    
+    public static void eliminarMaquina(Maquina m) {
+        eliminarMaquina(m.getID());
+    }
+    
+    // Este metodo busca en el archivo PlantasMaquinas.txt la linea que contenga
+    // la asociacion de la maquina con la planta y elimina la linea.
+    public static void eliminarAsociacionPlantaMaquina(Maquina m) {
+        Predicate<String> criterio = linea -> {
+            String[] datos = linea.split(DATA_SEPARATOR);
+            int idMaquina = Integer.parseInt(datos[1]);
+            return idMaquina == m.getID();
+        };
+        
+        eliminarLineaEnArchivo(pathPlantasMaquinas, criterio);
+    }    
 
     public static Maquina buscarMaquina(int ID){
         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
