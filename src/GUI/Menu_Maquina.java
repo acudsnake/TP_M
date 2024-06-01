@@ -160,7 +160,14 @@ public class Menu_Maquina extends javax.swing.JPanel {
     }//GEN-LAST:event_botonEliminarActionPerformed
 
     private void botonConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConsultarActionPerformed
-        // TODO add your handling code here:
+        JPanel menu = new ConsultarMaquina();
+        menu.setSize(736,449);
+        menu.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(menu, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
     }//GEN-LAST:event_botonConsultarActionPerformed
 
     private void botonCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCargarActionPerformed
