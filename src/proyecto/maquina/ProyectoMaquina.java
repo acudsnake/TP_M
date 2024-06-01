@@ -1,6 +1,7 @@
 package proyecto.maquina;
 
 import GUI.*;
+import com.formdev.flatlaf.FlatDarculaLaf;
 import clases.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,6 +10,8 @@ public class ProyectoMaquina {
     public static void main(String[] args) {
         //debemos realizar varios test para ver si los ficheros guardan y cargan bien
         //Fichero.crear_TODOS_TXT();
+        FlatDarculaLaf.setup();
+
         Pantalla inicio = new Pantalla();
         inicio.setVisible(true);
         
