@@ -181,6 +181,8 @@ public class Fichero {
                 String[] datos = linea.split(DATA_SEPARATOR);
                 if(Integer.parseInt(datos[0])==ID){
                     Planta p= new Planta(datos[1],Integer.parseInt(datos[2]));
+                    // HAY QUE CAMBIAR LOS CONSTRUCTORES YA antes de que nos olvidemos de pasar las IDS
+                    p.setId(Integer.parseInt(datos[0]));
                     return p;
              }
             }
@@ -217,21 +219,73 @@ public class Fichero {
         temporalFile.renameTo(originalFile);
     }
     
-    public static ArrayList<Maquina> leerMaquinas(){
-        ArrayList<Maquina> lista_maquinas = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
+    private static void modificarLineaEnArchivo(String pathOriginal, Predicate<String> criterio, String lineaNueva) {
+        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathOriginal));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))) {
             String linea;
-            while ((linea = br.readLine()) != null){
-                String[] datos = linea.split(DATA_SEPARATOR);
-                Maquina maquina= new Maquina(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4]);
-                maquina.setID(Integer.parseInt(datos[0]));
-                //maquina.setPlantaId(Integer.parseInt(datos[5]));
-                lista_maquinas.add(maquina);
+            while ((linea = reader.readLine()) != null) {
+                // Si el criterio coincide con la línea actual, se escribe la línea modificada
+                if (criterio.test(linea)) {
+                    writer.write(lineaNueva);
+                    writer.newLine();
+                } else {
+                    // Si no coincide, se copia la línea tal como está
+                    writer.write(linea);
+                    writer.newLine();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return lista_maquinas;
+
+        // Elimina el archivo original y utiliza el archivo temporal
+        File originalFile = new File(pathOriginal);
+        File temporalFile = new File(pathTemp);
+        originalFile.delete();
+        temporalFile.renameTo(originalFile);
+    }
+   
+    // TODO: usar Optional para evitar usar NULL
+    public static Planta buscarPlantaAsignada(Maquina maquina) {
+        try (BufferedReader br = new BufferedReader(new FileReader(pathPlantasMaquinas))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if (Integer.parseInt(datos[1]) == maquina.getID()) {
+                    return buscarPlanta(Integer.parseInt(datos[0]));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+}
+    
+    public static ArrayList<Maquina> leerMaquinas() {
+        ArrayList<Maquina> maquinas = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(DATA_SEPARATOR);
+                Maquina m = new Maquina(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4]);
+                m.setID(Integer.parseInt(datos[0]));
+
+                // Buscar la planta asignada a esta maquina
+                Planta p = buscarPlantaAsignada(m);
+                
+                // Si la encontro, cargarla en la maquina.
+                if (p != null) {
+                    m.setPlanta(p);
+                    m.setPlantaId(p.getId());
+                }
+                
+                maquinas.add(m);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return maquinas;
     }
     
     public static void guardarMaquina(Maquina maquina){
@@ -247,6 +301,27 @@ public class Fichero {
         catch (IOException e) {
             System.out.println("Error" + e.getMessage());
         }
+    }
+    
+    public static void modificarMaquina(Maquina antigua, Maquina nueva) {
+        // Linea que va a contener la nueva maquina
+        // Por obvias razones, la id anterior debemos mantenerla.
+        String lineaNueva = antigua.getID() + DATA_SEPARATOR 
+                + nueva.getMarca() + DATA_SEPARATOR 
+                + nueva.getModelo() + DATA_SEPARATOR
+                + nueva.getNumero() + DATA_SEPARATOR
+                + nueva.getEstado();
+        
+        // Codigo para modificar la maquina antigua por la nueva de Maquinas.txt
+        Predicate<String> criterio = linea -> {
+            String[] datos = linea.split(DATA_SEPARATOR);
+            int idMaquina = Integer.parseInt(datos[0]);
+            return idMaquina == antigua.getID();
+        };
+        
+        modificarLineaEnArchivo(pathMaquinas, criterio, lineaNueva);
+        //modificarLineaEnArchivo(pathPlantasMaquinas, criterio, lineaNueva);
+        
     }
     
     // Eliminar maquina por ID
