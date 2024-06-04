@@ -302,6 +302,10 @@ public class Fichero {
         }
     }
     
+    // Este metodo modifica los campos antiguos por los nuevos en el archivo de Maquinas.txt
+    // Tambien modifica el archivo PlantasMaquinas.txt si el usuario quiere
+    // asignar la maquina a otra planta.
+    // Duda: Una maquina rota se le puede quitar la asignacion de la maquina a la planta?
     public static void modificarMaquina(Maquina antigua, Maquina nueva) {
         // Linea que va a contener la nueva maquina
         // Por obvias razones, la id anterior debemos mantenerla.
@@ -319,8 +323,23 @@ public class Fichero {
         };
         
         modificarLineaEnArchivo(pathMaquinas, criterio, lineaNueva);
-        //modificarLineaEnArchivo(pathPlantasMaquinas, criterio, lineaNueva);
         
+        // Verificar por si acaso el usuario no selecciono ninguna planta a asignar.
+        if (nueva.getPlanta() == null) {
+            throw new IllegalArgumentException("Error: Una maquina no puede existir sin una planta asignada.");
+        }
+        
+        // Codigo para modificar la asociacion de la planta y la maquina
+        lineaNueva = nueva.getPlanta().getId() + DATA_SEPARATOR + antigua.getID();
+        
+        criterio = linea -> {
+            String[] datos = linea.split(DATA_SEPARATOR);
+            int idMaquina = Integer.parseInt(datos[1]);
+            return idMaquina == antigua.getID();
+        };
+        
+        
+        modificarLineaEnArchivo(pathPlantasMaquinas, criterio, lineaNueva);
     }
     
     // Eliminar maquina por ID
@@ -343,7 +362,7 @@ public class Fichero {
         // Si hay una planta asignada a esta maquina, la eliminara.
         // De lo contrario, no pasara nada.
         eliminarAsociacionPlantaMaquina(m);
-        //eliminarAsociacionMaquinaTecnico();
+        // TODO: eliminarAsociacionMaquinaTecnico();
         
     }
     

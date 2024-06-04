@@ -30,7 +30,6 @@ public class EditarMaquinaCampos extends javax.swing.JPanel {
             int id = Integer.parseInt(tablaPlantas.getValueAt(i, COLUMNA_ID).toString());
             if (m.getPlanta() != null && id == m.getPlanta().getId()) {
                 tablaPlantas.setValueAt(true, i, COLUMNA_SELECCIONAR);
-                System.out.println("Seteando");
             }
         }
         
@@ -266,15 +265,26 @@ public class EditarMaquinaCampos extends javax.swing.JPanel {
             }
         }
         
+        // Por modelo de dominio, una maquina no puede quedar sin asignar a una planta.
         if (!found) {
             JOptionPane.showMessageDialog(null, "Seleccione una planta a la cual asignar la maquina", "Ok", JOptionPane.ERROR_MESSAGE);
             return;
         }
         
         Maquina nueva = new Maquina(fieldMarca.getText(), fieldModelo.getText(), Integer.parseInt(fieldNumero.getText()), fieldEstado.getText());
+        nueva.setPlanta(p);
         
         Fichero.modificarMaquina(antigua, nueva);
-        //Fichero.modificarPlantaMaquina(antigua, nueva);
+        
+        // Volver al menu Editar
+        JPanel menu = new EditarMaquina();
+        menu.setSize(736,449);
+        menu.setLocation(0,0);
+        Background.setLayout(new BorderLayout());
+        Background.removeAll();
+        Background.add(menu, BorderLayout.CENTER);
+        Background.revalidate();
+        Background.repaint();
         
         JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_botonGuardarActionPerformed
