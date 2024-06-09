@@ -1,8 +1,6 @@
 package GUI;
 import clases.Fichero;
 import clases.Maquina;
-import clases.Planta;
-import clases.Proceso;
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -23,7 +21,7 @@ public class EditarMaquina extends javax.swing.JPanel {
     }
 
     private void cargarTablaMaquinas() {
-        DefaultTableModel model = (DefaultTableModel) tablaMaquinas.getModel();
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
         
         // Limpiar tabla antes de empezar a cargar.
         model.setRowCount(0);
@@ -39,7 +37,7 @@ public class EditarMaquina extends javax.swing.JPanel {
                 false
             });
         }
-        tablaMaquinas.setModel(model);
+        Table.setModel(model);
     }
 
     @SuppressWarnings("unchecked")
@@ -52,7 +50,7 @@ public class EditarMaquina extends javax.swing.JPanel {
         opcionesBuscador = new javax.swing.JComboBox<>();
         botonVolver = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaMaquinas = new javax.swing.JTable();
+        Table = new javax.swing.JTable();
         botonEditar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -85,7 +83,7 @@ public class EditarMaquina extends javax.swing.JPanel {
             }
         });
 
-        tablaMaquinas.setModel(new javax.swing.table.DefaultTableModel(
+        Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -108,12 +106,12 @@ public class EditarMaquina extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        tablaMaquinas.addMouseListener(new java.awt.event.MouseAdapter() {
+        Table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablaMaquinasMouseClicked(evt);
+                TableMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tablaMaquinas);
+        jScrollPane1.setViewportView(Table);
 
         botonEditar.setText("Continuar");
         botonEditar.addActionListener(new java.awt.event.ActionListener() {
@@ -227,46 +225,43 @@ public class EditarMaquina extends javax.swing.JPanel {
     }//GEN-LAST:event_opcionesBuscadorActionPerformed
 
     private void campoBuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoBuscadorKeyTyped
-        DefaultTableModel model = (DefaultTableModel) tablaMaquinas.getModel();
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
         TableRowSorter trs = new TableRowSorter(model);
         
         campoBuscador.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent key) {
                 trs.setRowFilter(RowFilter.regexFilter(campoBuscador.getText(), sel));
-                tablaMaquinas.setRowSorter(trs);
+                Table.setRowSorter(trs);
             }
         });
     }//GEN-LAST:event_campoBuscadorKeyTyped
 
-    private void tablaMaquinasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMaquinasMouseClicked
-        // Codigo para permitir seleccionar un solo elemento de la tabla.
-        // NO CONFIABLE: se bugea cuando seleccionas otra cosa
-        int selectedRow = tablaMaquinas.getSelectedRow();
-        if (tablaMaquinas.getSelectedColumn() == COLUMNA_SELECCIONAR &&
-                (Boolean) tablaMaquinas.getValueAt(selectedRow , COLUMNA_SELECCIONAR)) {
-            for (int i = 0; i < tablaMaquinas.getRowCount(); i++) {
-                if (i != selectedRow) {
-                    tablaMaquinas.setValueAt(false, i, COLUMNA_SELECCIONAR);
-                }
-            }
+    private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
+        int selectedRow = Table.getSelectedRow();
+            if ((Boolean)Table.getValueAt(selectedRow , 5)) {
+               for (int i = 0; i < Table.getRowCount(); i++) {
+               if ( i != selectedRow) {
+                  Table.setValueAt(false, i, 5);
+               }
+             }
         }
-    }//GEN-LAST:event_tablaMaquinasMouseClicked
+    }//GEN-LAST:event_TableMouseClicked
 
     private void botonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEditarActionPerformed
         // Buscar maquina seleccionado en la tabla para poder editarla
         boolean found = false;
         int idMaquinaSeleccionada = -1;
-        for (int i = 0; i < tablaMaquinas.getRowCount(); i++) {
+        for (int i = 0; i < Table.getRowCount(); i++) {
             // Si esta maquina ha sido seleccionada...
-            if ((Boolean) tablaMaquinas.getValueAt(i, COLUMNA_SELECCIONAR)) {
-                idMaquinaSeleccionada = Integer.parseInt(tablaMaquinas.getValueAt(i, 0).toString());
+            if ((Boolean) Table.getValueAt(i, COLUMNA_SELECCIONAR)) {
+                idMaquinaSeleccionada = Integer.parseInt(Table.getValueAt(i, 0).toString());
                 found = true;
                 break;
             } 
         }
         
-        if (tablaMaquinas.getRowCount() == 0 || !found) {
+        if (Table.getRowCount() == 0 || !found) {
             JOptionPane.showMessageDialog(null, "No hay ninguna maquina seleccionada para editar.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -295,6 +290,7 @@ public class EditarMaquina extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
+    private javax.swing.JTable Table;
     private javax.swing.JButton botonEditar;
     private javax.swing.JButton botonVolver;
     private javax.swing.JTextField campoBuscador;
@@ -304,6 +300,5 @@ public class EditarMaquina extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> opcionesBuscador;
-    private javax.swing.JTable tablaMaquinas;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,62 +1,39 @@
 package GUI;
 import clases.Fichero;
-import clases.Planta;
 import clases.Proceso;
 import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 
 public class EliminarProceso extends javax.swing.JPanel {
-    DefaultTableModel model = new DefaultTableModel();
+    int sel=0;
     
     public EliminarProceso() {
         initComponents();
         imprimir_tabla();
     }
  
-    public void imprimir_tabla(){
-           Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Nombre", "Complejidad", "ID", "Selecionado"};
-           boolean [] editable= {false, false, false, true};
-           Class[] types =new Class[]{
-               java.lang.Object.class,
-               java.lang.Object.class, 
-               java.lang.Object.class, 
-               java.lang.Boolean.class};
-           DefaultTableModel model = new DefaultTableModel(columnas, 0){
-           public Class getColumnClass(int i){
-               return types[i];
-           }
-           public boolean isCellEditable(int row, int column){
-               return editable[column];
-           }
-           };
-           limpiar(Table, model);
-           Object[] datos= new Object[columnas.length];    
-           ArrayList<Proceso> lista_procesos= Fichero.leerProcesos();
-           for(int i=0; i<lista_procesos.size(); i++){
-                Proceso p= (Proceso) lista_procesos.get(i);
-                datos[0]= String.valueOf(p.getNombre());
-                datos[1]= String.valueOf(p.getComplejidad());
-                datos[2]= p.getID();
-                datos[3]=false;
-                model.addRow(datos);
+   private void imprimir_tabla() {
+           DefaultTableModel model = (DefaultTableModel) Table.getModel();
+           model.setRowCount(0);
+           ArrayList<Proceso> procesos = Fichero.leerProcesos();
+           for (Proceso p : procesos) {
+               model.addRow(new Object[] {
+                   p.getNombre(),
+                   p.getComplejidad(),
+                   p.getID(),
+                   p.getPlanta().size(),
+                   false
+               });
            }
            Table.setModel(model);
        }
-
-    public void limpiar(JTable tabla, DefaultTableModel modelo){
-        if(modelo.getRowCount()>0){
-            for(int i=0; i<tabla.getRowCount(); i++){
-            modelo.removeRow(i);
-            i-=1;
-            }
-        }
-    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -66,23 +43,35 @@ public class EliminarProceso extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         Table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        Buscador = new javax.swing.JTextField();
+        Seleccion = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Complejidad", "ID", "Cant. Plantas", "Seleccion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         Table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TableMouseClicked(evt);
@@ -92,13 +81,23 @@ public class EliminarProceso extends javax.swing.JPanel {
 
         jLabel1.setText("Buscar");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        Buscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                BuscadorActionPerformed(evt);
+            }
+        });
+        Buscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                BuscadorKeyTyped(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "Cant. Maquinas", "Cant. Procesos" }));
+        Seleccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Complejidad", "ID", "Cant. Plantas" }));
+        Seleccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SeleccionActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Volver");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -128,9 +127,9 @@ public class EliminarProceso extends javax.swing.JPanel {
                         .addGap(131, 131, 131)
                         .addComponent(jLabel1)
                         .addGap(27, 27, 27)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(188, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -153,8 +152,8 @@ public class EliminarProceso extends javax.swing.JPanel {
                         .addGap(30, 30, 30)
                         .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(BackgroundLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jButton1)))
@@ -179,9 +178,9 @@ public class EliminarProceso extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void BuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_BuscadorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Menu_Proceso menu_proceso= new Menu_Proceso();
@@ -223,16 +222,38 @@ public class EliminarProceso extends javax.swing.JPanel {
 
     }//GEN-LAST:event_TableMouseClicked
 
+    private void SeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionActionPerformed
+         String selected = (String) Seleccion.getSelectedItem();
+        switch (selected) {
+            case "Nombre": sel = 0; break;
+            case "Complejidad": sel = 1; break;
+            case "ID": sel = 2; break;
+            case "Cant. Plantas": sel = 3; break;
+        }
+    }//GEN-LAST:event_SeleccionActionPerformed
+
+    private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        TableRowSorter trs = new TableRowSorter(model);
+        Buscador.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent key) {
+                trs.setRowFilter(RowFilter.regexFilter(Buscador.getText(), sel));
+                Table.setRowSorter(trs);
+            }
+        });
+    }//GEN-LAST:event_BuscadorKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
+    private javax.swing.JTextField Buscador;
+    private javax.swing.JComboBox<String> Seleccion;
     private javax.swing.JTable Table;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

@@ -17,9 +17,6 @@ public class EditarPlanta extends javax.swing.JPanel {
         Superficie.setText(String.valueOf(p_vieja.getSuperficie()));
     }
 
-
-    
-
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -63,6 +60,11 @@ public class EditarPlanta extends javax.swing.JPanel {
         Superficie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SuperficieActionPerformed(evt);
+            }
+        });
+        Superficie.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SuperficieKeyTyped(evt);
             }
         });
 
@@ -152,6 +154,13 @@ public class EditarPlanta extends javax.swing.JPanel {
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void SuperficieKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SuperficieKeyTyped
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c)) {
+                evt.consume();
+            }
+    }//GEN-LAST:event_SuperficieKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

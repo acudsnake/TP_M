@@ -181,11 +181,14 @@ public class CrearOpera extends javax.swing.JPanel {
         Opera opera = new Opera();
         opera.setFechaInicio(fecha);
         opera.setTurno(sel);
+        opera.setTecnico(t);
+        opera.setMaquina(lista_maquinas.get(loop-1));
         
 
         Fichero.guardarOpera(opera);
-        Fichero.guardarMaquinasTecnicos(t.getID(), lista_maquinas.get(loop-1).getID(), opera.getID());
-        JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
+        
+
+JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
         
         if(loop!=1){
             CrearOpera op= new CrearOpera(t, lista_maquinas, loop-1);
@@ -207,8 +210,6 @@ public class CrearOpera extends javax.swing.JPanel {
             Background.revalidate();
             Background.repaint();        
         }
-        
-        
         }
         
         

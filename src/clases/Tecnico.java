@@ -1,5 +1,6 @@
 package clases;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Tecnico {
     private String nombre;
@@ -8,6 +9,7 @@ public class Tecnico {
     private String contacto;
     private LocalDate fechaNacimiento;
     int ID;
+    private ArrayList<Maquina> maquinas; //0...*
     private Opera opera;
 
     public Tecnico() {
@@ -21,6 +23,16 @@ public class Tecnico {
         this.contacto = contacto;
     }
 
+    public ArrayList<Maquina> getMaquinas() {
+        return maquinas;
+    }
+
+    public void setMaquinas(ArrayList<Maquina> maquinas) {
+        this.maquinas = maquinas;
+    }
+
+    
+    
     public String getNombre() {
         return nombre;
     }

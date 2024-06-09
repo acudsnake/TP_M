@@ -1,13 +1,13 @@
 package GUI;
-
 import clases.Fichero;
-import clases.Maquina;
 import clases.*;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
+import java.awt.Color;
+import javafx.scene.layout.Border;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
+import javax.swing.*;
+import java.awt.*;
 
 public class CrearPlanta extends javax.swing.JPanel {
     public CrearPlanta() {
@@ -24,7 +24,7 @@ public class CrearPlanta extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        Color = new javax.swing.JTextField();
+        color = new javax.swing.JTextField();
         Superficie = new javax.swing.JTextField();
 
         jToggleButton1.setText("jToggleButton1");
@@ -47,9 +47,9 @@ public class CrearPlanta extends javax.swing.JPanel {
 
         jLabel2.setText("Superficie");
 
-        Color.addActionListener(new java.awt.event.ActionListener() {
+        color.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ColorActionPerformed(evt);
+                colorActionPerformed(evt);
             }
         });
 
@@ -58,48 +58,52 @@ public class CrearPlanta extends javax.swing.JPanel {
                 SuperficieActionPerformed(evt);
             }
         });
+        Superficie.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                SuperficieKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
         BackgroundLayout.setHorizontalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(22, 22, 22))
             .addGroup(BackgroundLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
-                        .addGap(0, 658, Short.MAX_VALUE)
-                        .addComponent(jButton2))
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(BackgroundLayout.createSequentialGroup()
-                .addGap(273, 273, 273)
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addGap(23, 23, 23)
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(Superficie)
-                    .addComponent(Color, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(273, 273, 273)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(23, 23, 23)
+                        .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(Superficie)
+                            .addComponent(color, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(jButton1)))
+                .addContainerGap(275, Short.MAX_VALUE))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addGap(147, 147, 147)
+                .addGap(135, 135, 135)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(Color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(Superficie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
                 .addComponent(jButton2)
-                .addContainerGap())
+                .addGap(27, 27, 27))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -114,30 +118,35 @@ public class CrearPlanta extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ColorActionPerformed
+    private void colorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ColorActionPerformed
+    }//GEN-LAST:event_colorActionPerformed
 
     private void SuperficieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SuperficieActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_SuperficieActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if(Color.getText().isEmpty() || Superficie.getText().isEmpty()){
+        Color customColor= new Color(237, 59, 59);
+        javax.swing.border.Border border = BorderFactory.createLineBorder(customColor, 2);
+        if(color.getText().isEmpty() || Superficie.getText().isEmpty()){
+            if(color.getText().isEmpty())
+                color.setBorder(border);
+//Color.setBackground(new Color (245, 165, 148 ));
+            if(Superficie.getText().isEmpty())
+                Superficie.setBorder(border);
             JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
         }
         else{
-        //Planta p= new Planta((String) Color.getText(), Integer.parseInt(Superficie.getText()));
-        
-        Planta p= new Planta();
-        p.setColor(Color.getText());
-        p.setSuperficie(Integer.parseInt(Superficie.getText()));
-        
-        Fichero.guardar_planta(p);
-        JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            Planta p= new Planta();
+            p.setColor(color.getText());
+            p.setSuperficie(Integer.parseInt(Superficie.getText()));
+            Fichero.guardar_planta(p);
+            JOptionPane.showMessageDialog(null, "Se realizó correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
+            color.setText("");
+            Superficie.setText("");
         }
-        
-        
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -151,11 +160,18 @@ public class CrearPlanta extends javax.swing.JPanel {
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void SuperficieKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SuperficieKeyTyped
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c)) {
+                evt.consume();
+            }
+    }//GEN-LAST:event_SuperficieKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
-    private javax.swing.JTextField Color;
     private javax.swing.JTextField Superficie;
+    private javax.swing.JTextField color;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;

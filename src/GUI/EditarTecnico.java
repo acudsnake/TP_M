@@ -80,6 +80,12 @@ public class EditarTecnico extends javax.swing.JPanel {
 
         jLabel4.setText("DNI");
 
+        DNI.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                DNIKeyTyped(evt);
+            }
+        });
+
         jLabel5.setText("Fecha de nacimiento");
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
@@ -212,6 +218,13 @@ public class EditarTecnico extends javax.swing.JPanel {
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void DNIKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DNIKeyTyped
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c)) {
+                evt.consume();
+            }
+    }//GEN-LAST:event_DNIKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -9,7 +9,7 @@ public class Maquina {
     private int numero;
     private String estado;
     private Planta planta; //1
-    private int plantaId; //1
+    private ArrayList<Tecnico> tecnicos;
     private Opera opera;
 
     public Maquina( ) {
@@ -70,13 +70,6 @@ public class Maquina {
         this.planta = planta;
     }
     
-   public int getPlantaId() {
-        return plantaId;
-    }
-
-    public void setPlantaId(int plantaId) {
-        this.plantaId = plantaId;
-    }
     
     public int getID() {
         return ID;
@@ -84,6 +77,14 @@ public class Maquina {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public ArrayList<Tecnico> getTecnicos() {
+        return tecnicos;
+    }
+
+    public void setTecnicos(ArrayList<Tecnico> tecnicos) {
+        this.tecnicos = tecnicos;
     }
 
 

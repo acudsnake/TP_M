@@ -1,69 +1,44 @@
 package GUI;
 import clases.Fichero;
+import clases.Opera;
 import clases.Tecnico;
 import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 
 public class EliminarTecnico extends javax.swing.JPanel {
-    DefaultTableModel model = new DefaultTableModel();
+    int sel=0;
 
     public EliminarTecnico() {
         initComponents();
         imprimir_tabla();
-
     }
  
-    public void imprimir_tabla(){
-           Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Nombre", "Apellido", "DNI","Contacto","Fecha de Nacimiento","ID","Selecionado"};
-           boolean [] editable= {false, false, false, false,false, false, true};
-           Class[] types =new Class[]{
-               java.lang.Object.class,
-               java.lang.Object.class,
-               java.lang.Object.class,
-               java.lang.Object.class,
-               java.lang.Object.class, 
-               java.lang.Object.class, 
-               java.lang.Boolean.class};
-           DefaultTableModel model = new DefaultTableModel(columnas, 0){
-           public Class getColumnClass(int i){
-               return types[i];
-           }
-           public boolean isCellEditable(int row, int column){
-               return editable[column];
-           }
-           };
-           limpiar(Table, model);
-           Object[] datos= new Object[columnas.length];    
-           ArrayList<Tecnico> lista_tecnico= Fichero.leerTecnicos();
-           for(int i=0; i<lista_tecnico.size(); i++){
-                Tecnico t= (Tecnico) lista_tecnico.get(i);
-                datos[0]= String.valueOf(t.getNombre());
-                datos[1]= String.valueOf(t.getApellido());
-                datos[2]=t.getDNI();
-                datos[3]=String.valueOf(t.getContacto());
-                datos[4]=t.getFechaNacimiento().getDayOfMonth() + "/" + t.getFechaNacimiento().getMonthValue()+ "/" +t.getFechaNacimiento().getYear();
-                datos[5]=t.getID();
-                datos[6]=false;
-                model.addRow(datos);
+    private void imprimir_tabla() {
+           DefaultTableModel model = (DefaultTableModel) Table.getModel();
+           model.setRowCount(0);
+           ArrayList<Tecnico> tecnicos = Fichero.leerTecnicos();
+           for (Tecnico t : tecnicos) {
+               model.addRow(new Object[] {
+                   t.getNombre(),
+                   t.getApellido(),
+                   t.getDNI(),
+                   t.getContacto(),
+                   t.getFechaNacimiento().getDayOfMonth() + "/" + t.getFechaNacimiento().getMonthValue()+ "/" +t.getFechaNacimiento().getYear(),
+                   t.getID(),
+                   false
+               });
            }
            Table.setModel(model);
        }
 
-    public void limpiar(JTable tabla, DefaultTableModel modelo){
-        if(modelo.getRowCount()>0){
-            for(int i=0; i<tabla.getRowCount(); i++){
-            modelo.removeRow(i);
-            i-=1;
-            }
-        }
-    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -80,15 +55,27 @@ public class EliminarTecnico extends javax.swing.JPanel {
 
         Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Apellido", "DNI", "Contacto", "Fecha de Nacimiento", "ID", "Seleccion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         Table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TableMouseClicked(evt);
@@ -109,7 +96,7 @@ public class EliminarTecnico extends javax.swing.JPanel {
             }
         });
 
-        Seleccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "ID", "Cant. Maquinas", "Cant. Procesos" }));
+        Seleccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nombre", "Apellido", "DNI", "Contacto", "Fecha de Nacimiento", "ID" }));
         Seleccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SeleccionActionPerformed(evt);
@@ -234,7 +221,17 @@ public class EliminarTecnico extends javax.swing.JPanel {
         }
         if(seleccion!=0){
             for(int i=0; i<lista_tecnicos.size(); i++){
-                Fichero.eliminarMaquinas_Tecnicos(lista_tecnicos.get(i));
+                
+                Tecnico t= new Tecnico(); 
+                t=Fichero.buscarTecnico(lista_tecnicos.get(i).getID());
+                
+                if(!t.getMaquinas().isEmpty()){
+                    for(int i2=0; i2<t.getMaquinas().size(); i2++){
+                        Opera op= new Opera();
+                        Fichero.FinalizarOpera(Fichero.buscarOpera(t.getID(),t.getMaquinas().get(i2).getID()));
+                        System.out.print("se finalizo opera \n");
+                    }
+                }
                 Fichero.eliminarTecnico(lista_tecnicos.get(i));
                 imprimir_tabla();
             }
@@ -258,11 +255,27 @@ public class EliminarTecnico extends javax.swing.JPanel {
     }//GEN-LAST:event_TableMouseClicked
 
     private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped
-
+         DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        TableRowSorter trs = new TableRowSorter(model);
+        Buscador.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent key) {
+                trs.setRowFilter(RowFilter.regexFilter(Buscador.getText(), sel));
+                Table.setRowSorter(trs);
+            }
+        });
     }//GEN-LAST:event_BuscadorKeyTyped
 
     private void SeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionActionPerformed
-
+        String selected = (String) Seleccion.getSelectedItem();
+        switch (selected) {
+            case "Nombre": sel = 0; break;
+            case "Apellido": sel = 1; break;
+            case "DNI": sel = 2; break;
+            case "Contacto": sel = 3; break;
+            case "Fecha de Nacimiento": sel = 34; break;
+            case "ID": sel = 5; break;
+        }
     }//GEN-LAST:event_SeleccionActionPerformed
 
 

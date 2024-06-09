@@ -181,6 +181,9 @@
         <Component class="javax.swing.JTextField" name="Contacto">
         </Component>
         <Component class="javax.swing.JTextField" name="DNI">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="DNIKeyTyped"/>
+          </Events>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="Fecha">
         </Component>

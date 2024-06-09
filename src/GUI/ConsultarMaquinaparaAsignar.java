@@ -3,15 +3,19 @@ import clases.Fichero;
 import clases.Maquina;
 import clases.Tecnico;
 import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 
 public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
-    DefaultTableModel model = new DefaultTableModel();
+    int sel = 0;
     Tecnico t= new Tecnico();
 
     public ConsultarMaquinaparaAsignar(Tecnico tecnico) {
@@ -20,50 +24,23 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
         imprimir_tabla();
     }
  
-    public void imprimir_tabla(){
-
-           Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Marca", "Modelo", "Numero","Estado","ID","Selecionado"};
-           boolean [] editable= {false, false, false, false,false, true};
-           Class[] types =new Class[]{
-               java.lang.Object.class,
-               java.lang.Object.class,
-               java.lang.Object.class,
-               java.lang.Object.class,
-               java.lang.Object.class, 
-               java.lang.Boolean.class};
-           DefaultTableModel model = new DefaultTableModel(columnas, 0){
-           public Class getColumnClass(int i){
-               return types[i];
-           }
-           public boolean isCellEditable(int row, int column){
-               return editable[column];
-           }
-           };
-           limpiar(Table, model);
-           Object[] datos= new Object[columnas.length];    
-           ArrayList<Maquina> lista_maquinas= Fichero.retornarMaquinasNOAsignadas(t);
-           for(int i=0; i<lista_maquinas.size(); i++){
-                Maquina m= (Maquina) lista_maquinas.get(i);
-                    datos[0]= String.valueOf(m.getMarca());
-                    datos[1]= String.valueOf(m.getModelo());
-                    datos[2]=m.getNumero();
-                    datos[3]=String.valueOf(m.getEstado());
-                    datos[4]=m.getID();
-                    datos[5]=false;
-                    model.addRow(datos);           
-           }
-           Table.setModel(model);
-       }
-
-    public void limpiar(JTable tabla, DefaultTableModel modelo){
-        if(modelo.getRowCount()>0){
-            for(int i=0; i<tabla.getRowCount(); i++){
-            modelo.removeRow(i);
-            i-=1;
-            }
+    private void imprimir_tabla() {
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        model.setRowCount(0);
+        ArrayList<Maquina> maquinas = Fichero.retornarMaquinasNOAsignadas(t);
+        for (Maquina m : maquinas) {
+            model.addRow(new Object[] {
+                m.getMarca(),
+                m.getModelo(),
+                m.getNumero(),
+                m.getEstado(),
+                m.getID(),
+                false
+            });
         }
+        Table.setModel(model);
     }
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -81,15 +58,27 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
 
         Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Marca", "Modelo", "Numero", "Estado", "ID", "Seleccion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         Table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TableMouseClicked(evt);
@@ -110,7 +99,7 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
             }
         });
 
-        Seleccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "ID", "Cant. Maquinas", "Cant. Procesos" }));
+        Seleccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Marca", "Modelo", "Numero", "Estado", "ID" }));
         Seleccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SeleccionActionPerformed(evt);
@@ -246,11 +235,26 @@ public class ConsultarMaquinaparaAsignar extends javax.swing.JPanel {
     }//GEN-LAST:event_TableMouseClicked
 
     private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped
-
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        TableRowSorter trs = new TableRowSorter(model);
+        Buscador.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent key) {
+                trs.setRowFilter(RowFilter.regexFilter(Buscador.getText(), sel));
+                Table.setRowSorter(trs);
+            }
+        });
     }//GEN-LAST:event_BuscadorKeyTyped
 
     private void SeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionActionPerformed
-
+        String selected = (String) Seleccion.getSelectedItem();
+        switch (selected) {
+            case "Marca": sel = 0; break;
+            case "Modelo": sel = 1; break;
+            case "Numero": sel = 2; break;
+            case "Estado": sel = 3; break;
+            case "ID": sel = 4; break;
+        }
     }//GEN-LAST:event_SeleccionActionPerformed
 
 

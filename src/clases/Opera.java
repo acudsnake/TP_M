@@ -7,12 +7,19 @@ public class Opera {
     private LocalDate  fechaInicio;
     private LocalDate  fechaFinal;
     private int turno;
-    private ArrayList<Maquina> maquina;
-    private ArrayList<Tecnico> tecnico;
+    private Maquina maquina;
+    private Tecnico tecnico;
     
     public Opera() {
     }
 
+    public Opera(int turno, LocalDate fechaInicio, Maquina maquina, Tecnico tecnico) {
+        this.fechaInicio = fechaInicio;
+        this.turno = turno;
+        this.tecnico=tecnico;
+        this.maquina=maquina;
+    }
+    
     public Opera(int turno, LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
         this.turno = turno;
@@ -32,19 +39,19 @@ public class Opera {
         this.turno = turno;
     }
 
-    public ArrayList<Maquina> getMaquina() {
+    public Maquina getMaquina() {
         return maquina;
     }
 
-    public void setMaquina(ArrayList<Maquina> maquina) {
+    public void setMaquina(Maquina maquina) {
         this.maquina = maquina;
     }
 
-    public ArrayList<Tecnico> getTecnico() {
+    public Tecnico getTecnico() {
         return tecnico;
     }
 
-    public void setTecnico(ArrayList<Tecnico> tecnico) {
+    public void setTecnico(Tecnico tecnico) {
         this.tecnico = tecnico;
     }
 

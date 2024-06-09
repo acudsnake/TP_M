@@ -13,55 +13,30 @@ import javax.swing.table.TableRowSorter;
 
 
 public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
-    DefaultTableModel model = new DefaultTableModel();
+    int sel = 0;
 
-    
     public ConsultarPlantaparaEditar() {
         initComponents();
         imprimir_tabla();
-
-        
     }
  
-    public void imprimir_tabla(){
-           Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "ID","Selecionado"};
-           boolean [] editable= {false, false, false, true};
-           Class[] types =new Class[]{
-               java.lang.Object.class,
-               java.lang.Object.class, 
-               java.lang.Object.class, 
-               java.lang.Boolean.class};
-           DefaultTableModel model = new DefaultTableModel(columnas, 0){
-           public Class getColumnClass(int i){
-               return types[i];
-           }
-           public boolean isCellEditable(int row, int column){
-               return editable[column];
-           }
-           };
-           limpiar(Table, model);
-           Object[] datos= new Object[columnas.length];    
-           ArrayList<Planta> lista_platas= Fichero.leerPlantas();
-           for(int i=0; i<lista_platas.size(); i++){
-                Planta p= (Planta) lista_platas.get(i);
-                datos[0]= String.valueOf(p.getColor());
-                datos[1]= p.getSuperficie();
-                datos[2]=p.getId();
-                datos[3]=false;
-                model.addRow(datos);
-           }
-           Table.setModel(model);
-       }
-
-    public void limpiar(JTable tabla, DefaultTableModel modelo){
-        if(modelo.getRowCount()>0){
-            for(int i=0; i<tabla.getRowCount(); i++){
-            modelo.removeRow(i);
-            i-=1;
-            }
+    private void imprimir_tabla() {
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        model.setRowCount(0);
+        ArrayList<Planta> plantas = Fichero.leerPlantas();
+        for (Planta p : plantas) {
+            model.addRow(new Object[] {
+                p.getColor(),
+                p.getSuperficie(),
+                p.getMaquina().size(),
+                p.getProceso().size(),
+                p.getId(),
+                false
+            });
         }
+        Table.setModel(model);
     }
+
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -79,15 +54,27 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
 
         Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Color", "Superficie", "Cant. Maquinas", "Cant. Procesos", "ID", "Seleccion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         Table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TableMouseClicked(evt);
@@ -213,11 +200,11 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
         Planta p= new Planta();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 3)){
+            if((Boolean) Table.getValueAt(i, 5)){
                 seleccion++;
                 p.setColor((String) Table.getValueAt(i, 0));
                 p.setSuperficie((int) Table.getValueAt(i, 1));
-                p.setId((int) Table.getValueAt(i, 2));
+                p.setId((int) Table.getValueAt(i, 4));
             }
         }
         if(seleccion!=0){
@@ -236,21 +223,37 @@ public class ConsultarPlantaparaEditar extends javax.swing.JPanel {
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
         int selectedRow = Table.getSelectedRow();
-            if ((Boolean)Table.getValueAt(selectedRow , 3)) {
+            if ((Boolean)Table.getValueAt(selectedRow , 5)) {
                for (int i = 0; i < Table.getRowCount(); i++) {
                if ( i != selectedRow) {
-                  Table.setValueAt(false, i, 3);
+                  Table.setValueAt(false, i, 5);
                }
              }
         }
     }//GEN-LAST:event_TableMouseClicked
 
     private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped
-
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        TableRowSorter trs = new TableRowSorter(model);
+        
+        Buscador.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent key) {
+                trs.setRowFilter(RowFilter.regexFilter(Buscador.getText(), sel));
+                Table.setRowSorter(trs);
+            }
+        });
     }//GEN-LAST:event_BuscadorKeyTyped
 
     private void SeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionActionPerformed
-
+        String selected = (String) Seleccion.getSelectedItem();
+        switch (selected) {
+            case "Color": sel = 0; break;
+            case "Superficie": sel = 1; break;
+            case "Cant. Maquinas": sel = 2; break;
+            case "Cant. Procesos": sel = 3; break;
+            case "ID": sel = 4; break;
+        }
     }//GEN-LAST:event_SeleccionActionPerformed
 
 

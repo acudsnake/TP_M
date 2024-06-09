@@ -174,14 +174,24 @@ public class Fichero {
     }
   
     public static Planta buscarPlanta(int ID){
+        Planta p= new Planta();
+        ArrayList<Maquina> maquinas= new ArrayList();
+        ArrayList<Proceso> procesos= new ArrayList();
+        
         try (BufferedReader br = new BufferedReader(new FileReader(pathPlantas))) {
             String linea;
             while ((linea = br.readLine()) != null){
                 String[] datos = linea.split(DATA_SEPARATOR);
                 if(Integer.parseInt(datos[0])==ID){
-                    Planta p= new Planta(datos[1],Integer.parseInt(datos[2]));
-                    // HAY QUE CAMBIAR LOS CONSTRUCTORES YA antes de que nos olvidemos de pasar las IDS
+                    p.setColor(datos[1]);
+                    p.setSuperficie(Integer.parseInt(datos[2]));
                     p.setId(Integer.parseInt(datos[0]));
+                    
+                    maquinas=Fichero.retornarMaquinasdePlanta(p);
+                    p.setMaquina(maquinas);
+                    
+                    procesos=Fichero.retornarProcesosdePlanta(p);
+                    p.setProceso(procesos);
                     return p;
              }
             }
@@ -276,8 +286,12 @@ public class Fichero {
                 // Si la encontro, cargarla en la maquina.
                 if (p != null) {
                     m.setPlanta(p);
-                    m.setPlantaId(p.getId());
+                    //m.setPlanta(p.getId());
                 }
+                
+                ArrayList<Tecnico> t= new ArrayList<>();
+                t=Fichero.retornarTecnicosAsignados(Integer.parseInt(datos[0]));
+                m.setTecnicos(t);
                 
                 maquinas.add(m);
             }
@@ -383,14 +397,17 @@ public class Fichero {
     }    
 
     public static Maquina buscarMaquina(int ID){
+        Maquina m= new Maquina();
         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinas))) {
             String linea;
             while ((linea = br.readLine()) != null){
                 String[] datos = linea.split(DATA_SEPARATOR);
                 if(Integer.parseInt(datos[0])==ID){
-                    Maquina m= new Maquina(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4]);
-                    m.setID(Integer.parseInt(datos[0]));
-                    //m.setPlantaId(Integer.parseInt(datos[5]));
+                    m= new Maquina(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4]);
+                    m.setID(ID);
+                    //ArrayList<Tecnico> tecnicos= new ArrayList();
+                    
+                    //m.setPlanta();
                     return m;
              }
             }
@@ -398,7 +415,8 @@ public class Fichero {
         catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        System.out.print("error");
+        return m;
     }
     
     //--------------------------------------PROCESOS--------------------------------------------//
@@ -611,6 +629,7 @@ public class Fichero {
     } 
     
     public static Tecnico buscarTecnico(int ID){
+        Tecnico tecnico= new Tecnico();
         try (BufferedReader br = new BufferedReader(new FileReader(pathTecnicos))) {
             String linea;
             while ((linea = br.readLine()) != null){
@@ -620,8 +639,17 @@ public class Fichero {
                     int mes = Integer.parseInt(datos[6]);
                     int año = Integer.parseInt(datos[7]);
                     LocalDate fecha = LocalDate.of(año, mes, dia);
-                    Tecnico tecnico= new Tecnico(datos[1], datos[2], Integer.parseInt(datos[3]), datos[4], fecha);
+                    tecnico.setNombre(datos[1]);
+                    tecnico.setApellido(datos[2]);
+                    tecnico.setDNI(Integer.parseInt(datos[3]));
+                    tecnico.setContacto(datos[4]);
+                    tecnico.setFechaNacimiento(fecha);
                     tecnico.setID(Integer.parseInt(datos[0]));
+                    
+                    ArrayList<Maquina> maquinas= new ArrayList();
+                    maquinas= Fichero.retornarMaquinasAsignadas(tecnico);
+                    
+                    tecnico.setMaquinas(maquinas);
                     return tecnico;
              }
             }
@@ -629,32 +657,41 @@ public class Fichero {
         catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return tecnico;
     }
     //-------------------------------------OPERAS------------------------------------------//
-    
+    //fix
     public static void guardarOpera(Opera opera){
             int id=Fichero.obtenerSiguenteCodigo(pathOperas);
             opera.setID(id);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathOperas, true))) {     
-                    writer.write(opera.getID() + DATA_SEPARATOR + opera.getTurno() + DATA_SEPARATOR +
-                            opera.getFechaInicio().getDayOfMonth() + DATA_SEPARATOR +  
-                            opera.getFechaInicio().getMonthValue() + DATA_SEPARATOR + 
-                            opera.getFechaInicio().getYear()+ DATA_SEPARATOR + "\n");
+                    writer.write(
+                            opera.getID() + DATA_SEPARATOR + //0
+                            opera.getMaquina().getID()+ DATA_SEPARATOR + //1     
+                            opera.getTecnico().getID()+ DATA_SEPARATOR + //2
+                            opera.getTurno() + DATA_SEPARATOR + //3
+                            opera.getFechaInicio().getDayOfMonth() + DATA_SEPARATOR +  //4
+                            opera.getFechaInicio().getMonthValue() + DATA_SEPARATOR + //5
+                            opera.getFechaInicio().getYear()+ DATA_SEPARATOR +  //6
+                            "\n");
             }
             catch (IOException e) {
                 System.out.println("Error" + e.getMessage());
             }
         }
-    
+    //fix
     public static Opera buscarOpera(int ID){
         try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
             String linea;
             while ((linea = br.readLine()) != null){
                 String[] datos = linea.split(DATA_SEPARATOR);
                 if(Integer.parseInt(datos[0])==ID){
-                    LocalDate fecha = LocalDate.of(Integer.parseInt(datos[4]), Integer.parseInt(datos[3]), Integer.parseInt(datos[2]));
-                    Opera opera= new Opera(Integer.parseInt(datos[1]), fecha);
+                    LocalDate fecha = LocalDate.of(Integer.parseInt(datos[6]), Integer.parseInt(datos[5]), Integer.parseInt(datos[4]));
+                    Maquina m= new Maquina(); 
+                    m=Fichero.buscarMaquina(Integer.parseInt(datos[1]));
+                    Tecnico t= new Tecnico();
+                    t=Fichero.buscarTecnico(Integer.parseInt(datos[2]));
+                    Opera opera= new Opera(Integer.parseInt(datos[3]), fecha,m,t);
                     opera.setID(Integer.parseInt(datos[0]));
                     return opera;
              }
@@ -687,7 +724,7 @@ public class Fichero {
         originalFile.delete();
         temporalFile.renameTo(originalFile);
     }
-    
+    //fix
     public static void FinalizarOpera(Opera opera){
         String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(pathOperas));
@@ -698,11 +735,16 @@ public class Fichero {
             int dia = fechaActual.getDayOfMonth();
             int mes = fechaActual.getMonthValue();
             int año = fechaActual.getYear();
-            String lineaNueva=opera.getID()+DATA_SEPARATOR + opera.getTurno() + DATA_SEPARATOR +
-                            opera.getFechaInicio().getDayOfMonth() + DATA_SEPARATOR +  
-                            opera.getFechaInicio().getMonthValue() + DATA_SEPARATOR + 
-                            opera.getFechaInicio().getYear()+ DATA_SEPARATOR +
-                            dia +DATA_SEPARATOR + mes +DATA_SEPARATOR + año;
+            
+            String lineaNueva=
+                    opera.getID()+DATA_SEPARATOR + 
+                    opera.getMaquina().getID()+DATA_SEPARATOR + 
+                    opera.getTecnico().getID()+DATA_SEPARATOR + 
+                    opera.getTurno() + DATA_SEPARATOR +     
+                    opera.getFechaInicio().getDayOfMonth() + DATA_SEPARATOR +         
+                    opera.getFechaInicio().getMonthValue() + DATA_SEPARATOR +               
+                    opera.getFechaInicio().getYear()+ DATA_SEPARATOR +        
+                    dia +DATA_SEPARATOR + mes +DATA_SEPARATOR + año;
             while ((linea = reader.readLine()) != null) {
                 datos = linea.split(DATA_SEPARATOR);
                 if(!(Integer.parseInt(datos[0])==opera.getID())){
@@ -723,6 +765,224 @@ public class Fichero {
         originalFile.delete();
         temporalFile.renameTo(originalFile);
     }
+    
+    public static Opera buscarOpera(int ID_t, int ID_m){
+        Opera opera= new Opera();
+        try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
+            String linea;
+            while ((linea = br.readLine()) != null){
+                String[] datos = linea.split(DATA_SEPARATOR);
+                if(datos.length==7 && Integer.parseInt(datos[1])==ID_m && Integer.parseInt(datos[2])==ID_t){
+                    LocalDate fecha = LocalDate.of(Integer.parseInt(datos[6]), Integer.parseInt(datos[5]), Integer.parseInt(datos[4]));
+                    Maquina m= new Maquina(); 
+                    m=Fichero.buscarMaquina(Integer.parseInt(datos[1]));
+                    Tecnico t= new Tecnico();
+                    t=Fichero.buscarTecnico(Integer.parseInt(datos[2]));
+                    opera.setTurno(Integer.parseInt(datos[3]));
+                    opera.setFechaInicio(fecha);
+                    opera.setMaquina(m);
+                    opera.setTecnico(t);
+                    opera.setID(Integer.parseInt(datos[0]));
+                    return opera;
+             }
+            }
+        } 
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return opera;
+    }
+    //fix
+    public static ArrayList<Maquina> retornarMaquinasNOAsignadas(Tecnico tecnico){
+         ArrayList<Maquina> lista_m= Fichero.leerMaquinas();
+         ArrayList<Maquina> lista_m_ya_asignadas= new ArrayList<>();
+         try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
+             String linea;
+             while ((linea = br.readLine()) != null){
+                 String[] datos = linea.split(DATA_SEPARATOR);
+                    if(datos.length==7  && Integer.parseInt(datos[2])==tecnico.getID()){
+                        Maquina maquina= new Maquina();
+                        maquina=Fichero.buscarMaquina(Integer.parseInt(datos[1]));
+                        lista_m_ya_asignadas.add(maquina);
+                    }
+                 
+                  
+             }
+         } 
+         catch (IOException e) {
+             e.printStackTrace();
+         }
+        ArrayList<Maquina> lista_final = new ArrayList<>();
+        /*for(int i=0; i<lista_m_ya_asignadas.size(); i++){
+            Boolean sel=false;
+            for(int i2=0; i2<lista_m.size(); i2++){
+                 if(lista_m.get(i2).getID()==lista_m_ya_asignadas.get(i).getID())
+                    sel=true;
+            }
+            System.out.print(sel + "\n");
+            if(sel==false)
+                lista_final.add(lista_m_ya_asignadas.get(i)); System.out.print(" Se guardo \n");
+         }*/
+         
+         
+       
+        for (Maquina maquina : lista_m) {
+            boolean isAssigned = false;
+            for (Maquina assignedMaquina : lista_m_ya_asignadas) {
+                if (maquina.getID() == assignedMaquina.getID()) {
+                    isAssigned = true;
+                    break;
+                }
+            }
+            if (!isAssigned) {
+                lista_final.add(maquina);
+            }
+        }
+         return lista_final;
+     }
+    //fix
+    public static ArrayList<Maquina> retornarMaquinasAsignadas(Tecnico tecnico){
+         ArrayList<Maquina> lista= new ArrayList<>();
+         System.out.print(tecnico.getID() + "\n");
+         try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
+             String linea;
+             while ((linea = br.readLine()) != null){
+                 String[] datos = linea.split(DATA_SEPARATOR);
+                 if(datos.length==7 && Integer.parseInt(datos[2])==tecnico.getID()){
+                     Maquina maquina= new Maquina();
+                     maquina=Fichero.buscarMaquina(Integer.parseInt(datos[1]));
+                     lista.add(maquina);
+                 }
+             }
+         } 
+         catch (IOException e) {
+             e.printStackTrace();
+         }
+         return lista;
+     }
+    
+    public static Boolean verificar_si_maquina_esta_asignado(Maquina t){
+            try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
+                String linea;
+                while ((linea = br.readLine()) != null){
+                    String[] datos = linea.split(DATA_SEPARATOR);
+                    linea= br.readLine();
+                    if(datos.length==7 && Integer.parseInt(datos[1])==t.getID()){
+                        return true;
+                    }
+                        
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    
+    public static ArrayList<Tecnico> retornarTecnicosAsignados(int id){
+         ArrayList<Tecnico> lista= new ArrayList<>();
+         try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
+             String linea;
+             while ((linea = br.readLine()) != null){
+                 String[] datos = linea.split(DATA_SEPARATOR);
+                 if(datos.length==7 && Integer.parseInt(datos[1])==id){
+                    Tecnico tecnico= new Tecnico();
+                    tecnico= Fichero.buscarTecnico(Integer.parseInt(datos[2]));
+                    lista.add(tecnico);
+                 }
+                 
+             }
+         } 
+         catch (IOException e) {
+             e.printStackTrace();
+         }
+         return lista;
+     }
+    
+    public static ArrayList<Tecnico> retornarTecnicosAsignados(){
+         ArrayList<Tecnico> lista= new ArrayList<>();
+         ArrayList<Tecnico> lista_2= new ArrayList<>();
+         try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
+             String linea;
+             while ((linea = br.readLine()) != null){
+                 String[] datos = linea.split(DATA_SEPARATOR);
+                 if(datos.length==7){
+                    Tecnico tecnico= new Tecnico();
+                    tecnico= Fichero.buscarTecnico(Integer.parseInt(datos[2]));
+                    Boolean sel=false;
+                    for(int i=0; i<lista_2.size(); i++){
+                        if (lista_2.get(i).getID()==tecnico.getID())
+                            sel=true;
+                    }
+                    if(sel==false){
+                        System.out.print("entro\n");
+                        lista.add(tecnico);
+                        lista_2.add(tecnico);
+                    }
+                    
+                 }
+                 
+             }
+         } 
+         catch (IOException e) {
+             e.printStackTrace();
+         }
+         return lista;
+     }
+
+    //
+    public static Boolean verificar_si_tecnico_esta_asignado(Tecnico t){
+            try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
+                String linea;
+                while ((linea = br.readLine()) != null){
+                    String[] datos = linea.split(DATA_SEPARATOR);
+                    linea= br.readLine();
+                    if(datos.length==7 && Integer.parseInt(datos[2])==t.getID()){
+                        return true;
+                    }
+                        
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    //
+     public static ArrayList<Tecnico> retornarTecnicosNOAsignados(){
+         ArrayList<Tecnico> lista_m= Fichero.leerTecnicos();
+         ArrayList<Tecnico> lista_m_ya_asignadas= new ArrayList<>();
+         
+         try (BufferedReader br = new BufferedReader(new FileReader(pathOperas))) {
+             String linea;
+             while ((linea = br.readLine()) != null){
+                 String[] datos = linea.split(DATA_SEPARATOR);
+                 Tecnico tecnico= new Tecnico();
+                 if(datos.length==7){
+                    tecnico=Fichero.buscarTecnico(Integer.parseInt(datos[2]));
+                    lista_m_ya_asignadas.add(tecnico);
+                    System.out.print("entro tecnico\n");
+                 }
+                 
+             }
+         } 
+         catch (IOException e) {
+             e.printStackTrace();
+         }
+         ArrayList<Tecnico> lista_final = new ArrayList<>();
+        for (Tecnico tecnico : lista_m) {
+            boolean isAssigned = false;
+            for (Tecnico assignedMaquina : lista_m_ya_asignadas) {
+                if (tecnico.getID() == assignedMaquina.getID()) {
+                    isAssigned = true;
+                    break;
+                }
+            }
+            if (!isAssigned) {
+                lista_final.add(tecnico);
+            }
+        }
+         return lista_final;
+     }
+    
     
     //-----------------------------------PLANTAS_MAQUINAS--------------------------------------------//
     
@@ -778,7 +1038,6 @@ public class Fichero {
                 if(!(Integer.parseInt(datos[0])==p.getId())){
                         writer.write(linea);
                         writer.newLine();
-                        
                     }
             } 
         } catch (IOException e) {
@@ -814,20 +1073,20 @@ public class Fichero {
     }
     
     public static Boolean verificar_si_proceso_esta_asignado(Proceso p){
+        Boolean sel=false;
             try (BufferedReader br = new BufferedReader(new FileReader(pathPlantasProcesos))) {
                 String linea;
                 while ((linea = br.readLine()) != null){
                     String[] datos = linea.split(DATA_SEPARATOR);
                     linea= br.readLine();
                     if(Integer.parseInt(datos[1])==p.getID()){
-                    return true;
+                        sel=true; 
                     }
-                        
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return false;
+            return sel;
         }
     
     public static ArrayList<Proceso> retornarProcesosdePlanta(Planta planta){
@@ -868,202 +1127,12 @@ public class Fichero {
         return lista_plantas;
     }
     
-    //-----------------------------------MAQUINAS_TECNICOS--------------------------------------------//
-    
-    public static void guardarMaquinasTecnicos(int ID_t, int ID_m, int ID_o){
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathMaquinasTecnicos, true))) {
-                    writer.write(ID_t + DATA_SEPARATOR + ID_m + DATA_SEPARATOR + ID_o +"\n");
-            }
-            catch (IOException e) {
-                System.out.println("Error" + e.getMessage());
-            }
-        }
-    
-    public static ArrayList<Maquina> retornarMaquinasNOAsignadas(Tecnico tecnico){
-         ArrayList<Maquina> lista_m= Fichero.leerMaquinas();
-         ArrayList<Maquina> lista_m_ya_asignadas= new ArrayList<>();
-         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinasTecnicos))) {
-             String linea;
-             while ((linea = br.readLine()) != null){
-                 String[] datos = linea.split(DATA_SEPARATOR);
-                 if(Integer.parseInt(datos[0])==tecnico.getID()){
-                     Maquina maquina= new Maquina();
-                     maquina=Fichero.buscarMaquina(Integer.parseInt(datos[1]));
-                     lista_m_ya_asignadas.add(maquina);
-                 }
-             }
-         } 
-         catch (IOException e) {
-             e.printStackTrace();
-         }
-
-         /*for(int i=0; i<lista_m_ya_asignadas.size(); i++){
-             int sel=0;
-             for(int i2=0; i2<lista_m.size(); i2++){
-                 if(lista_m.get(i2).getID()==lista_m_ya_asignadas.get(i).getID())
-                    sel++; 
-             }
-             System.out.print(sel + "\n");
-             if(sel==0)
-                 lista_final.add(lista_m_ya_asignadas.get(i)); System.out.print(" Se guardo \n");
-         }
-         */
-         
-         ArrayList<Maquina> lista_final = new ArrayList<>();
-        for (Maquina maquina : lista_m) {
-            boolean isAssigned = false;
-            for (Maquina assignedMaquina : lista_m_ya_asignadas) {
-                if (maquina.getID() == assignedMaquina.getID()) {
-                    isAssigned = true;
-                    break;
-                }
-            }
-            if (!isAssigned) {
-                lista_final.add(maquina);
-            }
-        }
-         return lista_final;
-     }
-    
-    public static ArrayList<Maquina> retornarMaquinasAsignadas(Tecnico tecnico){
-         ArrayList<Maquina> lista= new ArrayList<>();
-         System.out.print(tecnico.getID() + "\n");
-         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinasTecnicos))) {
-             String linea;
-             while ((linea = br.readLine()) != null){
-                 String[] datos = linea.split(DATA_SEPARATOR);
-                 if(Integer.parseInt(datos[0])==tecnico.getID()){
-                     Maquina maquina= new Maquina();
-                     maquina=Fichero.buscarMaquina(Integer.parseInt(datos[1]));
-                     lista.add(maquina);
-                 }
-             }
-         } 
-         catch (IOException e) {
-             e.printStackTrace();
-         }
-         return lista;
-     }
- 
-    public static void eliminarMaquinas_Tecnicos(Tecnico tecnico){
-        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
-        ArrayList<Opera> lista_operas = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathMaquinasTecnicos));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
-            String linea;
-            String[] datos;
-            
-            while ((linea = reader.readLine()) != null) {
-                datos = linea.split(DATA_SEPARATOR);
-                if(!(Integer.parseInt(datos[0])==tecnico.getID())){
-                        writer.write(linea);
-                        writer.newLine();
-                    }
-                else{
-                lista_operas.add(Fichero.buscarOpera(Integer.parseInt(datos[2])));
-                }
-                    
-            } 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File originalFile = new File(pathMaquinasTecnicos);
-        File temporalFile = new File(pathTemp);
-        originalFile.delete();
-        temporalFile.renameTo(originalFile);
-        
-        for(int i=0; i<lista_operas.size(); i++){
-            Fichero.FinalizarOpera(lista_operas.get(i));
-        }
-    }
-
-    public static void eliminarMaquinas_Tecnicos(Tecnico tecnico, Maquina maquina){
-        String pathTemp = pathCurrent + File.separator + "src/data/temp.txt";
-        ArrayList<Opera> lista_operas = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(pathMaquinasTecnicos));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(pathTemp))){
-            String linea;
-            String[] datos;
-            while ((linea = reader.readLine()) != null) {
-                datos = linea.split(DATA_SEPARATOR);
-                if(!(Integer.parseInt(datos[0])==tecnico.getID() && Integer.parseInt(datos[1])==maquina.getID())){
-                        writer.write(linea);
-                        writer.newLine();
-                    }
-                else{
-                lista_operas.add(Fichero.buscarOpera(Integer.parseInt(datos[2])));
-                }
-                    
-            } 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File originalFile = new File(pathMaquinasTecnicos);
-        File temporalFile = new File(pathTemp);
-        originalFile.delete();
-        temporalFile.renameTo(originalFile);
-        
-        for(int i=0; i<lista_operas.size(); i++){
-            Fichero.FinalizarOpera(lista_operas.get(i));
-        }
-    }
-    
-    public static ArrayList<Tecnico> retornarTecnicosAsignados(){
-         ArrayList<Tecnico> lista= new ArrayList<>();
-         ArrayList<Integer> lista_IDS = new ArrayList<>();
-         try (BufferedReader br = new BufferedReader(new FileReader(pathMaquinasTecnicos))) {
-             String linea;
-             while ((linea = br.readLine()) != null){
-                 String[] datos = linea.split(DATA_SEPARATOR);
-                 if(!lista_IDS.contains(Integer.parseInt(datos[0]))){
-                    Tecnico tecnico= new Tecnico();
-                    tecnico= Fichero.buscarTecnico(Integer.parseInt(datos[0]));
-                    lista.add(tecnico);
-                    lista_IDS.add(Integer.parseInt(datos[0]));
-                 }
-                 
-             }
-         } 
-         catch (IOException e) {
-             e.printStackTrace();
-         }
-         return lista;
-     }
 }
      
     
 
 /*
--Implementar Menu_tecnico del proyecto anterior
--Creacion de Jpanels: ConsultarTecnicoparaAsignar, ConsultarMaquinasparaAsignar
--Nuevo metodo llamado "leerTecnicos"
--Nuevo metodo llamado "guardarOpera" 
--Nuevo metodo llamado "guardarMaquinasTecnicos"
--Asignar tecnico a maquina es funcional
-
--Creacion de Jpanels: 
-*ConsultarTecnico
-*CrearTecnico
-*EliminarTecnico
-*ConsultarTecnicoparaEditar
-*EditarTecnico
-*ConsultarTecnicoparaAsignar
-*ConsultarMaquinaparaAsignar
-*ConsultarMaquinaparaDesasignar
-*ConsultarTecnicoparaDesasignar
--Nuevo metodo llamado "guardarTecnico"
--Nuevo metodo llamado "eliminarTecnico"
--Nuevo metodo llamado "buscarTecnico"
--Nuevo metodo llamado "modificarTecnico"
--Nuevo metodo llamado "retornarMaquinasAsignadas"
--Nuevo metodo llamado "eliminarOpera"
--Nuevo metodo llamado "buscarOpera"
--Nuevo metodo llamado "eliminarMaquinas_Tecnicos (Tecnico)"
--Nuevo metodo llamado "eliminarMaquinas_Tecnicos (Tecnico, Maquina)"
--Nuevo metodo llamado "retornarTecnicosAsignados"
--Nuevo metodo llamado "FinalizarOpera"
--Editar, Eliminar, Consultar tecnico son totalmente funcionales
--Elimar tecnico elimina las maquinas y operas que tenia asignados
--Desasginar y Asignar Tecnico totalmente funcional
-
+-correccion de operas
+-controles en los gui
+-arreglar el selccionar uno de editarmaquina-+
 */

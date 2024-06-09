@@ -184,6 +184,21 @@ public class EliminarMaquina extends javax.swing.JPanel {
         
         if (opcion == JOptionPane.YES_OPTION) {
             Fichero.eliminarMaquina(idMaquina);
+            
+            //finalizar todos los opera de las maquinas que se finalizaron
+            ArrayList<Tecnico> tenicos_asignados= new ArrayList<>();
+            tenicos_asignados=Fichero.retornarTecnicosAsignados(idMaquina);
+            
+            if(!tenicos_asignados.isEmpty()){
+                for(int i2=0; i2<tenicos_asignados.size(); i2++){
+                    Opera op= new Opera();
+                    Fichero.FinalizarOpera(Fichero.buscarOpera(tenicos_asignados.get(i2).getID(),idMaquina));
+                    System.out.print("se finalizo opera \n");
+                }
+            }
+            
+            
+            
             cargarTablaMaquinas(); // Actualizar la tabla con los nuevos cambios.
         }
         

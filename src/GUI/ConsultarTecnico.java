@@ -31,7 +31,6 @@ public class ConsultarTecnico extends javax.swing.JPanel {
    public void imprimir_tabla(){
         model.setRowCount(0);
         ArrayList<Tecnico> lista_tecnico= Fichero.leerTecnicos();
-        
         int i=0;
         while (i < lista_tecnico.size()) {
             int cant_maquinas=Fichero.retornarMaquinasAsignadas(lista_tecnico.get(i)).size();
@@ -46,12 +45,58 @@ public class ConsultarTecnico extends javax.swing.JPanel {
                  lista_tecnico.get(i).getFechaNacimiento().getYear(),
                  String.valueOf(lista_tecnico.get(i).getID()),
                  String.valueOf(cant_maquinas)
-                         });
+                 });
              i++;
         }
         Table.setModel(model);
     }
 
+   public void imprimir_tabla_sin(){
+        model.setRowCount(0);
+        ArrayList<Tecnico> lista_tecnico= Fichero.retornarTecnicosNOAsignados();
+        int i=0;
+        while (i < lista_tecnico.size()) {
+            int cant_maquinas=Fichero.retornarMaquinasAsignadas(lista_tecnico.get(i)).size();
+            
+             model.addRow(new String[]{
+                 lista_tecnico.get(i).getNombre(), 
+                 lista_tecnico.get(i).getApellido(), 
+                 lista_tecnico.get(i).getContacto(), 
+                 String.valueOf(lista_tecnico.get(i).getDNI()) ,
+                 lista_tecnico.get(i).getFechaNacimiento().getDayOfMonth() + "/" + 
+                 lista_tecnico.get(i).getFechaNacimiento().getMonthValue()+ "/" +
+                 lista_tecnico.get(i).getFechaNacimiento().getYear(),
+                 String.valueOf(lista_tecnico.get(i).getID()),
+                 String.valueOf(cant_maquinas)
+                 });
+             i++;
+        }
+        Table.setModel(model);
+    }
+   
+   public void imprimir_tabla_con(){
+        model.setRowCount(0);
+        ArrayList<Tecnico> lista_tecnico= Fichero.retornarTecnicosAsignados();
+        int i=0;
+        while (i < lista_tecnico.size()) {
+            int cant_maquinas=Fichero.retornarMaquinasAsignadas(lista_tecnico.get(i)).size();
+            
+             model.addRow(new String[]{
+                 lista_tecnico.get(i).getNombre(), 
+                 lista_tecnico.get(i).getApellido(), 
+                 lista_tecnico.get(i).getContacto(), 
+                 String.valueOf(lista_tecnico.get(i).getDNI()) ,
+                 lista_tecnico.get(i).getFechaNacimiento().getDayOfMonth() + "/" + 
+                 lista_tecnico.get(i).getFechaNacimiento().getMonthValue()+ "/" +
+                 lista_tecnico.get(i).getFechaNacimiento().getYear(),
+                 String.valueOf(lista_tecnico.get(i).getID()),
+                 String.valueOf(cant_maquinas)
+                 });
+             i++;
+        }
+        Table.setModel(model);
+    }
+   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -63,6 +108,8 @@ public class ConsultarTecnico extends javax.swing.JPanel {
         Buscador = new javax.swing.JTextField();
         Seleccion = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
 
         Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -104,20 +151,47 @@ public class ConsultarTecnico extends javax.swing.JPanel {
             }
         });
 
+        jRadioButton2.setText("Sin maquinas asignadas");
+        jRadioButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadioButton2MouseClicked(evt);
+            }
+        });
+
+        jRadioButton1.setText("Con maquinas asignadas");
+        jRadioButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadioButton1MouseClicked(evt);
+            }
+        });
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
         Background.setLayout(BackgroundLayout);
         BackgroundLayout.setHorizontalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addGap(131, 131, 131)
-                .addComponent(jLabel1)
-                .addGap(27, 27, 27)
-                .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(27, 27, 27)
+                        .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(49, 49, 49)))
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton2)
+                    .addComponent(jRadioButton1))
+                .addGap(63, 63, 63))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                 .addContainerGap(81, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -128,15 +202,19 @@ public class ConsultarTecnico extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
+                        .addContainerGap()
+                        .addComponent(jButton1)
+                        .addGap(8, 8, 8)
                         .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                        .addGap(25, 25, 25)
+                        .addComponent(jRadioButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47))
         );
@@ -158,12 +236,12 @@ public class ConsultarTecnico extends javax.swing.JPanel {
     }//GEN-LAST:event_BuscadorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Menu_Proceso menu_proceso= new Menu_Proceso();
-        menu_proceso.setSize(736,449);
-        menu_proceso.setLocation(0,0);
+        Menu_Tecnico volver= new Menu_Tecnico();
+        volver.setSize(736,449);
+        volver.setLocation(0,0);
         Background.setLayout(new BorderLayout());
         Background.removeAll();
-        Background.add(menu_proceso, BorderLayout.CENTER);
+        Background.add(volver, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -197,6 +275,28 @@ public class ConsultarTecnico extends javax.swing.JPanel {
         Table.setRowSorter(trs);
     }//GEN-LAST:event_BuscadorKeyTyped
 
+    private void jRadioButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButton2MouseClicked
+        if(jRadioButton2.isSelected()){
+            jRadioButton1.setSelected(false);
+            imprimir_tabla_sin();
+        }
+        else
+        imprimir_tabla();
+    }//GEN-LAST:event_jRadioButton2MouseClicked
+
+    private void jRadioButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButton1MouseClicked
+        if(jRadioButton1.isSelected()){
+            jRadioButton2.setSelected(false);
+            imprimir_tabla_con();
+        }
+        else
+        imprimir_tabla();
+    }//GEN-LAST:event_jRadioButton1MouseClicked
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
@@ -205,6 +305,8 @@ public class ConsultarTecnico extends javax.swing.JPanel {
     private javax.swing.JTable Table;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,3 +1,4 @@
 1,Marca1,Modelo1,100,En funcionamiento
 2,Marca2,Modelo2,200,En reparacion
 3,Marca3,Modelo3,300,No funciona
+4,123,123,123,123

@@ -2,61 +2,40 @@ package GUI;
 import clases.Fichero;
 import clases.*;
 import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 
 public class EliminarPlanta extends javax.swing.JPanel {
-    DefaultTableModel model = new DefaultTableModel();
+    int sel=0;
     
     public EliminarPlanta() {
         initComponents();
         imprimir_tabla();
     }
  
-
-    public void imprimir_tabla(){
-           Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "ID","Selecionado"};
-           boolean [] editable= {false, false, false, true};
-           Class[] types =new Class[]{
-               java.lang.Object.class, 
-               java.lang.Object.class, 
-               java.lang.Object.class, 
-               java.lang.Boolean.class};
-           DefaultTableModel model = new DefaultTableModel(columnas, 0){
-           public Class getColumnClass(int i){
-               return types[i];
-           }
-           public boolean isCellEditable(int row, int column){
-               return editable[column];
-           }
-           };
-           limpiar(Table, model);
-           Object[] datos= new Object[columnas.length];    
-           ArrayList<Planta> lista_platas= Fichero.leerPlantas();
-           for(int i=0; i<lista_platas.size(); i++){
-                Planta p= (Planta) lista_platas.get(i);
-                datos[0]= String.valueOf(p.getColor());
-                datos[1]= p.getSuperficie();
-                datos[2]= p.getId();
-                datos[3]=false;
-                model.addRow(datos);
+    private void imprimir_tabla() {
+           DefaultTableModel model = (DefaultTableModel) Table.getModel();
+           model.setRowCount(0);
+           ArrayList<Planta> plantas = Fichero.leerPlantas();
+           for (Planta p : plantas) {
+               model.addRow(new Object[] {
+                   p.getColor(),
+                   p.getSuperficie(),
+                   p.getMaquina().size(),
+                   p.getProceso().size(),
+                   p.getId(),
+                   false
+               });
            }
            Table.setModel(model);
        }
-
-    public void limpiar(JTable tabla, DefaultTableModel modelo){
-        if(modelo.getRowCount()>0){
-            for(int i=0; i<tabla.getRowCount(); i++){
-            modelo.removeRow(i);
-            i-=1;
-            }
-        }
-    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -66,23 +45,35 @@ public class EliminarPlanta extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         Table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        Buscador = new javax.swing.JTextField();
+        Seleccion = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Color", "Superficie", "Cant. Maquinas", "Cant. Procesos", "ID", "Seleccion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         Table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TableMouseClicked(evt);
@@ -92,13 +83,23 @@ public class EliminarPlanta extends javax.swing.JPanel {
 
         jLabel1.setText("Buscar");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        Buscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                BuscadorActionPerformed(evt);
+            }
+        });
+        Buscador.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                BuscadorKeyTyped(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "Cant. Maquinas", "Cant. Procesos" }));
+        Seleccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Color", "Superficie", "Cant. Maquinas", "Cant. Procesos" }));
+        Seleccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SeleccionActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Volver");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -128,9 +129,9 @@ public class EliminarPlanta extends javax.swing.JPanel {
                         .addGap(131, 131, 131)
                         .addComponent(jLabel1)
                         .addGap(27, 27, 27)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(188, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackgroundLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -153,8 +154,8 @@ public class EliminarPlanta extends javax.swing.JPanel {
                         .addGap(30, 30, 30)
                         .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Seleccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(BackgroundLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jButton1)))
@@ -179,9 +180,9 @@ public class EliminarPlanta extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void BuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BuscadorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_BuscadorActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Menu_Planta menu_planta= new Menu_Planta();
@@ -207,24 +208,18 @@ public class EliminarPlanta extends javax.swing.JPanel {
         }
         if(seleccion>0){
             for(int i=0; i<lista.size(); i++){
-                Fichero.eliminarPlanta(lista.get(i));
-                
-                //Eliminar maquinas que tenia asignadas
-                ArrayList<Maquina> maquinas= Fichero.leerMaquinas();
-                for(int i2=0; i2<maquinas.size(); i2++){
-                    if(maquinas.get(i2).getPlantaId()==lista.get(i).getId())
-                        Fichero.eliminarMaquina(maquinas.get(i2));
+                Planta aux= new Planta();
+                aux=Fichero.buscarPlanta(lista.get(i).getId());
+                Fichero.eliminarPlanta(aux);
+                for(int i2=0; i2<aux.getMaquina().size(); i2++){
+                    Fichero.eliminarMaquina(aux.getMaquina().get(i2));
                 }
-                
-                //eliminar o desasignar procesos que tenia asignado
-                Fichero.eliminarPlantas_Procesos(lista.get(i));
-                ArrayList<Proceso> procesos= new ArrayList();
-                procesos= Fichero.leerProcesos();
-                for(int i2=0; i2<procesos.size(); i2++){
-                    if(!Fichero.verificar_si_proceso_esta_asignado(procesos.get(i2))){
-                        Fichero.eliminarProceso(procesos.get(i2));
-                    }    
-                }
+                Fichero.eliminarPlantas_Procesos(aux);
+                for(int i2=0; i2<aux.getProceso().size(); i2++){
+                    if(!Fichero.verificar_si_proceso_esta_asignado(aux.getProceso().get(i2)))
+                        Fichero.eliminarProceso(aux.getProceso().get(i2));
+                }   
+                    
                 imprimir_tabla();
             }
             JOptionPane.showMessageDialog(null, "Se elimino correctamente", "Ok", JOptionPane.INFORMATION_MESSAGE);
@@ -235,26 +230,49 @@ public class EliminarPlanta extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
-        /*int selectedRow = Table.getSelectedRow();
-            if ((Boolean)Table.getValueAt(selectedRow , 3)) {
+         int selectedRow = Table.getSelectedRow();
+            if ((Boolean)Table.getValueAt(selectedRow , 5)) {
                for (int i = 0; i < Table.getRowCount(); i++) {
                if ( i != selectedRow) {
-                  Table.setValueAt(false, i, 3);
+                  Table.setValueAt(false, i, 5);
                }
              }
-        }*/
+        }
     }//GEN-LAST:event_TableMouseClicked
+
+    private void SeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionActionPerformed
+        String selected = (String) Seleccion.getSelectedItem();
+        switch (selected) {
+            case "Color": sel = 0; break;
+            case "Superficie": sel = 1; break;
+            case "Cant. Maquinas": sel = 2; break;
+            case "Cant. Procesos": sel = 3; break;
+            case "ID": sel = 4; break;
+        }
+    }//GEN-LAST:event_SeleccionActionPerformed
+
+    private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        TableRowSorter trs = new TableRowSorter(model);
+        Buscador.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent key) {
+                trs.setRowFilter(RowFilter.regexFilter(Buscador.getText(), sel));
+                Table.setRowSorter(trs);
+            }
+        });
+    }//GEN-LAST:event_BuscadorKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
+    private javax.swing.JTextField Buscador;
+    private javax.swing.JComboBox<String> Seleccion;
     private javax.swing.JTable Table;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

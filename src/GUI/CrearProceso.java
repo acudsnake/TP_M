@@ -12,44 +12,21 @@ public class CrearProceso extends javax.swing.JPanel {
         imprimir_tabla();
     }
 
-    public void imprimir_tabla(){
-           Table.setDefaultRenderer(Object.class, new Render());
-           String [] columnas= new String[]{"Color", "Superficie", "ID","Selecionado"};
-           boolean [] editable= {false, false, false, true};
-           Class[] types =new Class[]{java.lang.Object.class,java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class};
-           DefaultTableModel model = new DefaultTableModel(columnas, 0){
-           public Class getColumnClass(int i){
-               return types[i];
-           }
-           public boolean isCellEditable(int row, int column){
-               return editable[column];
-           }
-           };
-           //limpiar(Table, model);
-           Object[] datos= new Object[columnas.length];    
-           ArrayList<Planta> lista_platas= Fichero.leerPlantas();
-           for(int i=0; i<lista_platas.size(); i++){
-                Planta p= (Planta) lista_platas.get(i);
-                datos[0]= String.valueOf(p.getColor());
-                datos[1]= p.getSuperficie();
-                datos[2]= p.getId();
-                datos[3]=false;
-                model.addRow(datos);
-           }
-           Table.setModel(model);
-       }
-     
-    
-    /*public void limpiar(JTable tabla, DefaultTableModel modelo){
-        if(modelo.getRowCount()>0){
-            for(int i=0; i<tabla.getRowCount(); i++){
-            modelo.removeRow(i);
-            i-=1;
-            }
+     private void imprimir_tabla() {
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        model.setRowCount(0);
+        ArrayList<Planta> plantas = Fichero.leerPlantas();
+        for (Planta p : plantas) {
+            model.addRow(new Object[] {
+                p.getColor(),
+                p.getSuperficie(),
+                p.getId(),
+                false
+            });
         }
+        Table.setModel(model);
     }
-    */
-    
+     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -78,15 +55,27 @@ public class CrearProceso extends javax.swing.JPanel {
 
         Table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Color", "Superficie", "Seleccionar", "Title 4"
+                "Color", "Superficie", "ID", "Seleccion"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         Table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TableMouseClicked(evt);
@@ -124,13 +113,10 @@ public class CrearProceso extends javax.swing.JPanel {
             .addGroup(BackgroundLayout.createSequentialGroup()
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton1))
-                    .addGroup(BackgroundLayout.createSequentialGroup()
                         .addGap(352, 352, 352)
                         .addComponent(jLabel5))
                     .addGroup(BackgroundLayout.createSequentialGroup()
-                        .addGap(209, 209, 209)
+                        .addGap(220, 220, 220)
                         .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(BackgroundLayout.createSequentialGroup()
                                 .addComponent(jLabel2)
@@ -139,15 +125,18 @@ public class CrearProceso extends javax.swing.JPanel {
                             .addGroup(BackgroundLayout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(Complejidad, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(Complejidad, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(BackgroundLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(jButton1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         BackgroundLayout.setVerticalGroup(
             BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackgroundLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(14, 14, 14)
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(Nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -155,7 +144,7 @@ public class CrearProceso extends javax.swing.JPanel {
                 .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(Complejidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(49, 49, 49)
+                .addGap(44, 44, 44)
                 .addComponent(jLabel5)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -192,13 +181,8 @@ public class CrearProceso extends javax.swing.JPanel {
     }//GEN-LAST:event_NombreActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
         ArrayList<Planta> lista= new ArrayList<>();
-        if(Nombre.getText().isEmpty() || Complejidad.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else{
-        for(int i=0; i<Table.getRowCount(); i++){
+         for(int i=0; i<Table.getRowCount(); i++){
             if((Boolean) Table.getValueAt(i, 3)){
                 Planta p= new Planta(
                 (String) Table.getValueAt(i, 0),
@@ -207,6 +191,12 @@ public class CrearProceso extends javax.swing.JPanel {
                 lista.add(p);
             }
         }
+
+        if(Nombre.getText().isEmpty() || Complejidad.getText().isEmpty() || lista.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Rellene todos los campos obligatorios", "Ok", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else{
+       
         Proceso pr= new Proceso(Nombre.getText(), Complejidad.getText());
         Fichero.guardarProceso(pr);
         Fichero.guardarPlantasProcesos(lista, pr);

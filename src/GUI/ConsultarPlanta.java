@@ -64,6 +64,11 @@ public class ConsultarPlanta extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        Table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(Table);
 
         jLabel1.setText("Buscar");
@@ -182,6 +187,11 @@ public class ConsultarPlanta extends javax.swing.JPanel {
         if (selected.equals("Cant. Procesos")) 
             sel=4;
     }//GEN-LAST:event_SeleccionActionPerformed
+
+    private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
+        if(evt.getClickCount()==2)
+            System.out.print("");
+    }//GEN-LAST:event_TableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
