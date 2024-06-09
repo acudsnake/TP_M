@@ -3,7 +3,7 @@ import clases.Fichero;
 import clases.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import javafx.scene.layout.Border;
+//import javafx.scene.layout.Border;
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.*;
