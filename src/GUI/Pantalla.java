@@ -14,6 +14,9 @@ public class Pantalla extends javax.swing.JFrame {
         Background.add(menu, BorderLayout.CENTER);
         Background.revalidate();
         Background.repaint();
+        
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/images/icon_planta1.png")).getImage());
+
     }
 
     @SuppressWarnings("unchecked")
@@ -23,6 +26,7 @@ public class Pantalla extends javax.swing.JFrame {
         Background = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sistema de fabrica de botellas");
         setResizable(false);
 
         javax.swing.GroupLayout BackgroundLayout = new javax.swing.GroupLayout(Background);
