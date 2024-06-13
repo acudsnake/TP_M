@@ -1,2 +1,5 @@
-1,2323,123
-2,p2,23,
+1,Lavado,3,
+2,Llenado,4,
+3,Etiquetado,2,
+4,Reciclado,5,
+5,Embalaje,3,
