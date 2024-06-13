@@ -199,10 +199,10 @@ public class EliminarPlanta extends javax.swing.JPanel {
         ArrayList<Planta> lista= new ArrayList();
         int seleccion=0;
         for(int i=0; i<Table.getRowCount(); i++){
-            if((Boolean) Table.getValueAt(i, 3)){
+            if((Boolean) Table.getValueAt(i, 5)){
                 seleccion++;
                 Planta p= new Planta((String) Table.getValueAt(i, 0), (int) Table.getValueAt(i, 1));
-                p.setId((int) Table.getValueAt(i, 2));
+                p.setId((int) Table.getValueAt(i, 4));
                 lista.add(p);
             }
         }

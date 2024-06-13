@@ -36,13 +36,13 @@
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="209" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jButton6" max="32767" attributes="0"/>
-                              <Component id="jButton4" max="32767" attributes="0"/>
+                              <Component id="boton_maquina" max="32767" attributes="0"/>
+                              <Component id="boton_planta" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="59" pref="32" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jButton5" max="32767" attributes="0"/>
-                              <Component id="jButton3" max="32767" attributes="0"/>
+                              <Component id="boton_proceso" max="32767" attributes="0"/>
+                              <Component id="boton_tecnico" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -61,13 +61,13 @@
                   <Component id="jLabel1" min="-2" pref="24" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jButton4" alignment="3" min="-2" pref="110" max="-2" attributes="0"/>
-                      <Component id="jButton5" alignment="3" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="boton_planta" alignment="3" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="boton_proceso" alignment="3" min="-2" pref="110" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jButton3" alignment="3" min="-2" pref="110" max="-2" attributes="0"/>
-                      <Component id="jButton6" alignment="3" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="boton_tecnico" alignment="3" min="-2" pref="110" max="-2" attributes="0"/>
+                      <Component id="boton_maquina" alignment="3" min="-2" pref="110" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="109" max="32767" attributes="0"/>
               </Group>
@@ -75,36 +75,36 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="jButton3">
+        <Component class="javax.swing.JButton" name="boton_tecnico">
           <Properties>
             <Property name="text" type="java.lang.String" value="Gestionar Tecnico"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="boton_tecnicoActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton4">
+        <Component class="javax.swing.JButton" name="boton_planta">
           <Properties>
             <Property name="text" type="java.lang.String" value="Gestionar Planta"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="boton_plantaActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton5">
+        <Component class="javax.swing.JButton" name="boton_proceso">
           <Properties>
             <Property name="text" type="java.lang.String" value="Gestionar Proceso"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="boton_procesoActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton6">
+        <Component class="javax.swing.JButton" name="boton_maquina">
           <Properties>
             <Property name="text" type="java.lang.String" value="Gestionar Maquina"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton6ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="boton_maquinaActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">

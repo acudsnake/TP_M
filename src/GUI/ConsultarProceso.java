@@ -1,6 +1,5 @@
 package GUI;
 import clases.Fichero;
-import clases.Planta;
 import clases.Proceso;
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
@@ -11,32 +10,27 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 public class ConsultarProceso extends javax.swing.JPanel {
-    DefaultTableModel model = new DefaultTableModel();
-    TableRowSorter trs;
     int sel=0;
     
     public ConsultarProceso() {
         initComponents();
-        model.addColumn("Nombre");
-        model.addColumn("Complejidad");
-        model.addColumn("ID");
-        model.addColumn("Cant. Plantas");
         imprimir_tabla();
     }
 
-   public void imprimir_tabla(){
-        model.setRowCount(0);
-        ArrayList<Proceso> lista_proceso= Fichero.leerProcesos();
-        
-        int i=0;
-        while (i < lista_proceso.size()) {
-            int cant_p= lista_proceso.get(i).getPlanta().size();
-             model.addRow(new String[]{lista_proceso.get(i).getNombre(), lista_proceso.get(i).getComplejidad(), String.valueOf(lista_proceso.get(i).getID()) 
-             , String.valueOf(cant_p)});
-             i++;
-        }
-        Table.setModel(model);
-    }
+   private void imprimir_tabla() {
+           DefaultTableModel model = (DefaultTableModel) Table.getModel();
+           model.setRowCount(0);
+           ArrayList<Proceso> procesos = Fichero.leerProcesos();
+           for (Proceso p : procesos) {
+               model.addRow(new Object[] {
+                   p.getNombre(),
+                   p.getComplejidad(),
+                   p.getID(),
+                   p.getPlanta().size(),
+               });
+           }
+           Table.setModel(model);
+       }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -58,9 +52,29 @@ public class ConsultarProceso extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Complejidad", "ID", "Cant. Plantas"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        Table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(Table);
 
         jLabel1.setText("Buscar");
@@ -156,26 +170,38 @@ public class ConsultarProceso extends javax.swing.JPanel {
 
     private void SeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SeleccionActionPerformed
         String selected = (String) Seleccion.getSelectedItem();
-        if (selected.equals("Nombre")) 
-            sel=0;
-        if (selected.equals("Complejidad")) 
-            sel=1;
-        if (selected.equals("ID")) 
-            sel=2;
-        if (selected.equals("Cant. Plantas")) 
-            sel=3;
+        switch (selected) {
+            case "Nombre": sel = 0; break;
+            case "Complejidad": sel = 1; break;
+            case "ID": sel = 2; break;
+            case "Cant. Plantas": sel = 3; break;
+        }
     }//GEN-LAST:event_SeleccionActionPerformed
 
     private void BuscadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_BuscadorKeyTyped
-        Buscador.addKeyListener(new KeyAdapter(){
-        @Override
-        public void keyReleased(KeyEvent ke){
-            trs.setRowFilter(RowFilter.regexFilter(Buscador.getText(), sel));
-        }
+        DefaultTableModel model = (DefaultTableModel) Table.getModel();
+        TableRowSorter trs = new TableRowSorter(model);
+        Buscador.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent key) {
+                trs.setRowFilter(RowFilter.regexFilter(Buscador.getText(), sel));
+                Table.setRowSorter(trs);
+            }
         });
-        trs= new TableRowSorter(model);
-        Table.setRowSorter(trs);
     }//GEN-LAST:event_BuscadorKeyTyped
+
+    private void TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TableMouseClicked
+        if(evt.getClickCount()==2){
+            MostrarProcesoEspecifico proceso_especifico= new MostrarProcesoEspecifico((int) Table.getValueAt(Table.getSelectedRow(), 2));
+            proceso_especifico.setSize(736,449);
+            proceso_especifico.setLocation(0,0);
+            Background.setLayout(new BorderLayout());
+            Background.removeAll();
+            Background.add(proceso_especifico, BorderLayout.CENTER);
+            Background.revalidate();
+            Background.repaint();
+        }
+    }//GEN-LAST:event_TableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

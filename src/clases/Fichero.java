@@ -78,6 +78,43 @@ public class Fichero {
         return -1;
     }
     
+    
+    public static void verificarOCrearArchivos() {
+        String[] paths = {
+            pathMaquinas,
+            pathOperas,
+            pathPlantas,
+            pathProcesos,
+            pathTecnicos,
+            pathPlantasProcesos,
+            pathPlantasMaquinas,
+            pathMaquinasTecnicos
+        };
+        for (String path : paths) {
+            File file = new File(path);
+            if (!file.exists()) {
+                try {
+                    // Crear directorio si no existe
+                    File parentDir = file.getParentFile();
+                    if (!parentDir.exists()) {
+                        parentDir.mkdirs();
+                    }
+                    // Crear archivo
+                    if (file.createNewFile()) {
+                        System.out.println("Archivo creado: " + path);
+                    } else {
+                        System.out.println("No se pudo crear el archivo: " + path);
+                    }
+                } catch (IOException e) {
+                    System.err.println("Error al crear el archivo: " + path);
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("El archivo ya existe: " + path);
+            }
+        }
+
+    }
     //--------------------------------------PLANTAS------------------------------------------//
     public static void guardar_planta(Planta planta){
             int id=Fichero.obtenerSiguenteCodigo(pathPlantas);
