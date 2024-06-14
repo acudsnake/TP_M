@@ -7,12 +7,12 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class EditarMaquinaCampos extends javax.swing.JPanel {
+public class ConsultarMaquinaparaEditar extends javax.swing.JPanel {
     final int COLUMNA_ID = 0;
     final int COLUMNA_SELECCIONAR = 3;
     Maquina antigua;
     
-    public EditarMaquinaCampos(Maquina m) {
+    public ConsultarMaquinaparaEditar(Maquina m) {
         initComponents();
         cargarTablaPlantas();
         

@@ -277,7 +277,7 @@ public class EditarMaquina extends javax.swing.JPanel {
         }
         
         // Cambiar al menu "Editar campos" para esa maquina.
-        JPanel menu = new EditarMaquinaCampos(m);
+        JPanel menu = new ConsultarMaquinaparaEditar(m);
         menu.setSize(736,449);
         menu.setLocation(0,0);
         Background.setLayout(new BorderLayout());
