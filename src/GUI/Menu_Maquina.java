@@ -151,7 +151,7 @@ public class Menu_Maquina extends javax.swing.JPanel {
     }//GEN-LAST:event_botonVolverActionPerformed
 
     private void botonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEditarActionPerformed
-        JPanel menu = new EditarMaquina();
+        JPanel menu = new ConsultarMaquinaparaEditar();
         menu.setSize(736,449);
         menu.setLocation(0,0);
         Background.setLayout(new BorderLayout());
