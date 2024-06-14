@@ -32,8 +32,8 @@ public class Menu_Planta extends javax.swing.JPanel {
             }
         });
 
-        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon-cargar.png"))); // NOI18N
-        jToggleButton1.setText("Cargar");
+        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon-agregar.png"))); // NOI18N
+        jToggleButton1.setText("Agregar");
         jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {

@@ -73,8 +73,8 @@ public class Menu_Maquina extends javax.swing.JPanel {
             }
         });
 
-        botonCargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon-cargar.png"))); // NOI18N
-        botonCargar.setText("Cargar");
+        botonCargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon-agregar.png"))); // NOI18N
+        botonCargar.setText("Agregar");
         botonCargar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         botonCargar.setMaximumSize(new java.awt.Dimension(65, 23));
         botonCargar.setMinimumSize(new java.awt.Dimension(65, 23));
@@ -119,11 +119,11 @@ public class Menu_Maquina extends javax.swing.JPanel {
                 .addGap(3, 3, 3)
                 .addComponent(jLabel1)
                 .addGap(118, 118, 118)
-                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(BackgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(botonEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(botonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(botonConsultar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(botonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(botonCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(163, Short.MAX_VALUE))
         );
 

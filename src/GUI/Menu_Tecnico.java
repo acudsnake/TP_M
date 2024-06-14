@@ -75,8 +75,8 @@ public class Menu_Tecnico extends javax.swing.JPanel {
             }
         });
 
-        jToggleButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon-cargar.png"))); // NOI18N
-        jToggleButton5.setText("Cargar");
+        jToggleButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon-agregar.png"))); // NOI18N
+        jToggleButton5.setText("Agregar");
         jToggleButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToggleButton5.addActionListener(new java.awt.event.ActionListener() {
